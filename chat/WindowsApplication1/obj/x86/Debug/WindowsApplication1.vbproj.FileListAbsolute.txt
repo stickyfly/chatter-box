@@ -1,0 +1,37 @@
+H:\Vb Projects\File-e-Nator\chat\WindowsApplication1\bin\Debug\WindowsApplication1.exe
+H:\Vb Projects\File-e-Nator\chat\WindowsApplication1\bin\Debug\WindowsApplication1.pdb
+H:\Vb Projects\File-e-Nator\chat\WindowsApplication1\bin\Debug\WindowsApplication1.xml
+H:\Vb Projects\File-e-Nator\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.Form1.resources
+H:\Vb Projects\File-e-Nator\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.Resources.resources
+H:\Vb Projects\File-e-Nator\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.vbproj.GenerateResource.Cache
+H:\Vb Projects\File-e-Nator\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.exe
+H:\Vb Projects\File-e-Nator\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.xml
+H:\Vb Projects\File-e-Nator\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.pdb
+H:\Vb Projects\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.exe
+H:\Vb Projects\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.xml
+H:\Vb Projects\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.pdb
+H:\Vb Projects\chat\WindowsApplication1\bin\Debug\WindowsApplication1.exe
+H:\Vb Projects\chat\WindowsApplication1\bin\Debug\WindowsApplication1.pdb
+H:\Vb Projects\chat\WindowsApplication1\bin\Debug\WindowsApplication1.xml
+H:\Vb Projects\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.Form1.resources
+H:\Vb Projects\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.Resources.resources
+H:\Vb Projects\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.vbproj.GenerateResource.Cache
+E:\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.xml
+E:\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.pdb
+E:\chat\WindowsApplication1\bin\Debug\WindowsApplication1.exe
+E:\chat\WindowsApplication1\bin\Debug\WindowsApplication1.pdb
+E:\chat\WindowsApplication1\bin\Debug\WindowsApplication1.xml
+E:\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.Form1.resources
+E:\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.Resources.resources
+E:\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.vbproj.GenerateResource.Cache
+E:\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.exe
+E:\Software\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.exe
+E:\Software\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.xml
+E:\Software\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.pdb
+E:\Software\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.Resources.resources
+E:\Software\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.vbproj.GenerateResource.Cache
+E:\Software\chat\WindowsApplication1\bin\Debug\WindowsApplication1.exe
+E:\Software\chat\WindowsApplication1\bin\Debug\WindowsApplication1.pdb
+E:\Software\chat\WindowsApplication1\bin\Debug\WindowsApplication1.xml
+E:\Software\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.StartForm.resources
+E:\Software\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.ChatForm.resources

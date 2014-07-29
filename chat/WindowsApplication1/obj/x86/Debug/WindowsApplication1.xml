@@ -1,0 +1,113 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+WindowsApplication1
+</name>
+</assembly>
+<members>
+<member name="M:WindowsApplication1.Tools.MatchIpToUser(System.String)">
+	<summary>
+ Matches an Ip Address to the User from the Known Users List
+ </summary>
+	<param name="IpAddress">The Ip to match</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WindowsApplication1.Tools.MatchIpToUserInt(System.String)">
+	<summary>
+ Returns the Index of the specified Ip in the KnownUser list
+ </summary>
+	<param name="IpAddress"> The Ip to search for</param>
+	<returns>The Index of the Ip. Returns -1 if Ip Addres is not found</returns>
+	<remarks></remarks>
+</member><member name="F:WindowsApplication1.Users.User.Self">
+	<summary>
+ Returns the personal user
+ </summary>
+	<remarks></remarks>
+</member><member name="M:WindowsApplication1.ChatConnections.ChatClientConnection.SendMessage(System.String,System.Drawing.Color,System.Drawing.Font)">
+	<summary>
+ Sends a message to everyone in the conversation
+ </summary>
+	<param name="text">The text in the message</param>
+	<param name="colour">The colour in the message</param>
+	<param name="font">The font used</param>
+	<remarks></remarks>
+</member><member name="M:WindowsApplication1.ChatConnections.ChatClientConnection.SendMessage(System.String,System.Drawing.Color,System.Drawing.Font,System.String[])">
+	<summary>
+ Sends a message to every Ip Address specified in the conversation
+ </summary>
+	<param name="text">The text in the message</param>
+	<param name="colour">The colour in the message</param>
+	<param name="font">The font used</param>
+	<param name="IpAddresses">The Ip Addresses, the message is to be sent to</param>
+	<remarks></remarks>
+</member><member name="M:WindowsApplication1.ChatConnections.ChatClientConnection.UpdateNickname">
+	<summary>
+ Refreshes and sends the current Nickname
+ </summary>
+	<remarks></remarks>
+</member><member name="M:WindowsApplication1.ChatConnections.ChatHostConnection.SendMessage(System.String,System.Drawing.Color,System.Drawing.Font)">
+	<summary>
+ Sends a message to everyone in the conversation
+ </summary>
+	<param name="text">The text in the message</param>
+	<param name="colour">The colour in the message</param>
+	<param name="font">The font used</param>
+	<remarks></remarks>
+</member><member name="M:WindowsApplication1.ChatConnections.ChatHostConnection.SendMessage(System.String,System.Drawing.Color,System.Drawing.Font,System.String[])">
+	<summary>
+ Sends a message to every specified Ip Address in the conversation
+ </summary>
+	<param name="text">The text in the message</param>
+	<param name="colour">The colour in the message</param>
+	<param name="font">The font used</param>
+	<param name="IpAddresses">The Ip Addresses, the message is to be sent to</param>
+	<remarks></remarks>
+</member><member name="M:WindowsApplication1.ChatConnections.ChatHostConnection.UpdateNickname">
+	<summary>
+ Refreshes and sends the current Nickname
+ </summary>
+	<remarks></remarks>
+</member><member name="P:WindowsApplication1.My.Resources.Resources.ResourceManager">
+	<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member><member name="P:WindowsApplication1.My.Resources.Resources.Culture">
+	<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member><member name="T:WindowsApplication1.My.Resources.Resources">
+	<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member><member name="E:WindowsApplication1.Scanner.ProgressUpdated">
+	<summary>
+ When the progress gets updated, this event will occur
+ </summary>
+	<param name="Ips">All new IPHostEntries detected in the network Note: This can be 0</param>
+	<param name="progress">Progress in Percent</param>
+	<remarks></remarks>
+</member><member name="M:WindowsApplication1.Scanner.sendping(System.String)">
+	<summary>
+ Sends a ping to a given IpAddress or hostname and adds a hostentry to the shared variable ips if the ping is successful
+ </summary>
+	<param name="IpOrName">The IP or Hostname to send the Ping to </param>
+	<remarks>as</remarks>
+</member><member name="M:WindowsApplication1.Scanner.SplitIp(System.String)">
+	<summary>
+ splits an ip into a bytearray
+ </summary>
+	<param name="ip">the ip to Split</param>
+	<returns>The resulting array</returns>
+	<remarks></remarks>
+</member><member name="M:WindowsApplication1.NewConnectionListerner.NewConnectionEstablisher.CreateNewChat(System.Collections.Generic.List{WindowsApplication1.Users.User})">
+	<summary>
+ Sends a Chat Request to a known User or a Group
+ </summary>
+	<param name="Users"></param>
+	<remarks></remarks>
+</member>
+</members>
+</doc>
