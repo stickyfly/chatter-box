@@ -1,13 +1,23 @@
 ﻿Imports System.Net
 Imports System.Net.Sockets
 Public Module Users
-    Public KnownUsers As New List(Of User)
+    Public KnownUsers As New UserCollection
 
     Public ChatRoomsHosting As New List(Of HostChatRoom)
     Public ChatRoomsJoined As New List(Of ClientChatRoom)
 
     Public PersonalNickname As New MessageLanguage.nickname
-    Public UserIDCount As UInteger
+
+    Public Class UserCollection
+        Inherits List(Of User)
+        Private UserIDCount As UInteger
+
+        Shadows Sub add(user As User)
+            user.UserID = UserIDCount
+            UserIDCount += 1
+            MyBase.Add(user)
+        End Sub
+    End Class
 
     Public Class User
         Public IpAddress As String
@@ -15,6 +25,7 @@ Public Module Users
         Public Status As MessageLanguage.chatstate
         Public ComputerName As String
         Public key() As Byte
+
         Public UserID As UInteger
         Public Sub New(IpAddress As String, Nickname As MessageLanguage.nickname, Computername As String, key() As Byte)
             Me.IpAddress = IpAddress

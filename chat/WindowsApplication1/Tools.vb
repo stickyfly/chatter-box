@@ -126,4 +126,16 @@ Module Tools
         Next
         Return Nothing
     End Function
+    Public Function MatchIDToUser(ByVal UserId As UInteger) As User
+        Return KnownUsers.Where(Function(u As User) u.UserID = UserId).First
+    End Function
+    Public Function MatchIDToUserInt(ByVal UserId As UInteger) As Integer
+        For i = 0 To KnownUsers.Count - 1
+            If KnownUsers(i).UserID = UserId Then
+                Return i
+                Exit Function
+            End If
+        Next
+        Return -1
+    End Function
 End Module

@@ -6,26 +6,7 @@ WindowsApplication1
 </name>
 </assembly>
 <members>
-<member name="M:WindowsApplication1.Tools.MatchIpToUser(System.String)">
-	<summary>
- Matches an Ip Address to the User from the Known Users List
- </summary>
-	<param name="IpAddress">The Ip to match</param>
-	<returns></returns>
-	<remarks></remarks>
-</member><member name="M:WindowsApplication1.Tools.MatchIpToUserInt(System.String)">
-	<summary>
- Returns the Index of the specified Ip in the KnownUser list
- </summary>
-	<param name="IpAddress"> The Ip to search for</param>
-	<returns>The Index of the Ip. Returns -1 if Ip Addres is not found</returns>
-	<remarks></remarks>
-</member><member name="F:WindowsApplication1.Users.User.Self">
-	<summary>
- Returns the personal user
- </summary>
-	<remarks></remarks>
-</member><member name="M:WindowsApplication1.ChatConnections.ChatClientConnection.SendMessage(System.String,System.Drawing.Color,System.Drawing.Font)">
+<member name="M:WindowsApplication1.ChatConnections.ChatClientConnection.SendMessage(System.String,System.Drawing.Color,System.Drawing.Font)">
 	<summary>
  Sends a message to everyone in the conversation
  </summary>
@@ -69,6 +50,31 @@ WindowsApplication1
  Refreshes and sends the current Nickname
  </summary>
 	<remarks></remarks>
+</member><member name="F:WindowsApplication1.Users.User.Self">
+	<summary>
+ Returns the personal user
+ </summary>
+	<remarks></remarks>
+</member><member name="M:WindowsApplication1.Tools.MatchIpToUser(System.String)">
+	<summary>
+ Matches an Ip Address to the User from the Known Users List
+ </summary>
+	<param name="IpAddress">The Ip to match</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:WindowsApplication1.Tools.MatchIpToUserInt(System.String)">
+	<summary>
+ Returns the Index of the specified Ip in the KnownUser list
+ </summary>
+	<param name="IpAddress"> The Ip to search for</param>
+	<returns>The Index of the Ip. Returns -1 if Ip Addres is not found</returns>
+	<remarks></remarks>
+</member><member name="M:WindowsApplication1.NewConnectionListerner.NewConnectionEstablisher.CreateNewChat(System.Collections.Generic.List{WindowsApplication1.Users.User})">
+	<summary>
+ Sends a Chat Request to a known User or a Group
+ </summary>
+	<param name="Users"></param>
+	<remarks></remarks>
 </member><member name="P:WindowsApplication1.My.Resources.Resources.ResourceManager">
 	<summary>
   Returns the cached ResourceManager instance used by this class.
@@ -101,12 +107,6 @@ WindowsApplication1
  </summary>
 	<param name="ip">the ip to Split</param>
 	<returns>The resulting array</returns>
-	<remarks></remarks>
-</member><member name="M:WindowsApplication1.NewConnectionListerner.NewConnectionEstablisher.CreateNewChat(System.Collections.Generic.List{WindowsApplication1.Users.User})">
-	<summary>
- Sends a Chat Request to a known User or a Group
- </summary>
-	<param name="Users"></param>
 	<remarks></remarks>
 </member>
 </members>

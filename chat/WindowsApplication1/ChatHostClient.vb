@@ -46,9 +46,32 @@ Module ChatConnections
 
         MustOverride Sub timertick()
 
+        Protected Sub send(ByVal message As Object, user As User)
+            Dim thread As New Threading.Thread(Sub() sendaway(message, user))
+            thread.Name = "TCP Client send"
+            thread.Start()
+        End Sub
+        Protected Sub send(ByVal message As Object, IpAddress As String)
+            Dim thread As New Threading.Thread(Sub() sendaway(message, MatchIpToUser(IpAddress)))
+            thread.Name = "TCP Client send"
+            thread.Start()
+        End Sub
+        Protected Sub sendaway(ByVal message As Object, user As User)
+
+            Dim tcpclient = New TcpClient(user.IpAddress, standartport)
+            Dim stream As NetworkStream = tcpclient.GetStream
+
+            encrypt(stream, message, user.key)
+
+            stream.Flush()
+            tcpclient.Close()
+        End Sub
+
     End Class
 
+
     Public Class ChatClientConnection
+
         Inherits ChatConnection
 
         Sub New(ChatRoomIndex As Integer)
@@ -75,7 +98,7 @@ Module ChatConnections
             msg.colour = colour
             msg.Font = font
             msg.SenderIp = MyIpAddress
-            send(msg)
+            send(msg, ChatRoomsJoined(ChatRoomIndex).HostUser)
         End Sub
         ''' <summary>
         ''' Sends a message to every Ip Address specified in the conversation
@@ -92,7 +115,7 @@ Module ChatConnections
             msg.Font = font
             msg.SenderIp = MyIpAddress
             msg.ReceiverIp = IpAddresses
-            send(msg)
+            send(msg, ChatRoomsJoined(ChatRoomIndex).HostUser)
         End Sub
         ''' <summary>
         ''' Refreshes and sends the current Nickname
@@ -102,12 +125,12 @@ Module ChatConnections
             Dim msg As New MessageLanguage.NicknameChanged
             msg.Nickname = PersonalNickname
             msg.SenderIp = MyIpAddress
-            send(msg)
+            send(msg, ChatRoomsJoined(ChatRoomIndex).HostUser)
         End Sub
         Public Sub Leave()
             Dim msg As New MessageLanguage.LeaveMessage
             msg.SenderIp = MyIpAddress
-            send(msg)
+            send(msg, ChatRoomsJoined(ChatRoomIndex).HostUser)
         End Sub
 
         Sub process_message(message As Object)
@@ -127,22 +150,7 @@ Module ChatConnections
                     RaiseGotBanned(message)
             End Select
         End Sub
-        Private Sub send(ByVal message As Object)
-            Dim thread As New Threading.Thread(Sub() sendaway(message))
-            thread.Name = "TCP Client send"
-            thread.Start()
-        End Sub
-        Private Sub sendaway(ByVal message As Object)
-            Dim tcpclient = New TcpClient(ChatRoomsJoined(ChatRoomIndex).HostUser.IpAddress, standartport)
-            Dim stream As NetworkStream = tcpclient.GetStream
-
-            encrypt(stream, message, ChatRoomsJoined(ChatRoomIndex).HostUser.key)
-
-            stream.Flush()
-            tcpclient.Close()
-        End Sub
     End Class
-
 
     Private Class ChatConnectionHelper
         Const standartport As Integer = 41640
@@ -290,8 +298,9 @@ Module ChatConnections
             RaiseUserLeft(KnownUsers(userint))
             ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs.RemoveAt(userint)
             For i = 0 To ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs.Count - 1
-                If Not SenderIp = ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs(i).IpAddress Then
-                    send(message, ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs(i).IpAddress)
+
+                If Not SenderIp = MatchIDToUser(ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs(i)).IpAddress Then
+                    send(message, ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs(i))
                 End If
             Next
         End Sub
@@ -307,50 +316,31 @@ Module ChatConnections
         End Sub
         Private Sub PublicMessage(message As MessageLanguage.publicmessage, SenderIp As String)
             RaisePublicMessageArrived(message)
+            Dim SenderUserInt = MatchIpToUserInt(SenderIp)
             For i = 0 To ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs.Count - 1
-                If Not SenderIp = ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs(i).IpAddress Then
-                    send(message, ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs(i).IpAddress)
+                If Not SenderUserInt = ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs(i) Then
+                    send(message, MatchIDToUser(ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs(i)).IpAddress)
                 End If
             Next
         End Sub
         Private Sub nickname(message As MessageLanguage.NicknameChanged, SenderIp As String)
             RaiseNickNameUpdated(SenderIp, message.Nickname)
+            Dim SenderInt As Integer = MatchIpToUserInt(SenderIp)
             For i = 0 To ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs.Count - 1
-                If Not SenderIp = ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs(i).IpAddress Then
-                    send(message, ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs(i).IpAddress)
+                If Not SenderInt = i Then
+                    send(message, MatchIDToUser(ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs(i)))
                 End If
             Next
         End Sub
         Private Sub SendEveryone(ByVal message As Object)
             For i = 0 To ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs.Count - 1
                 Dim k As Integer = i
-                Dim thread As New Threading.Thread(Sub() sendaway(message, ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs(k).IpAddress, ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs(k).key))
+                Dim thread As New Threading.Thread(Sub() sendaway(message, MatchIDToUser(ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs(k))))
                 thread.Name = "TCP Client send"
                 thread.Start()
             Next
         End Sub
-        Private Sub send(ByVal message As Object, IpAddress As String)
 
-            Dim key() As Byte = MatchIpToUserKey(IpAddress)
-
-            If Not key Is Nothing Then
-                Dim thread As New Threading.Thread(Sub() sendaway(message, IpAddress, key))
-                thread.Name = "TCP Client send"
-                thread.Start()
-            Else
-                'Ip Address not found
-            End If
-        End Sub
-        Private Sub sendaway(ByVal message As Object, IpAddress As String, ByteKey() As Byte)
-
-            Dim tcpclient = New TcpClient(IpAddress, standartport)
-            Dim stream As NetworkStream = tcpclient.GetStream
-
-            encrypt(stream, message, ByteKey)
-
-            stream.Flush()
-            tcpclient.Close()
-        End Sub
     End Class
 
 End Module
