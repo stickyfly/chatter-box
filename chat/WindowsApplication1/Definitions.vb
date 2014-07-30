@@ -1,13 +1,23 @@
 ﻿Imports System.Net
 Imports System.Net.Sockets
 Public Module Users
-    Public KnownUsers As New List(Of User)
+    Public KnownUsers As New UserCollection
 
     Public ChatRoomsHosting As New List(Of HostChatRoom)
     Public ChatRoomsJoined As New List(Of ClientChatRoom)
 
     Public PersonalNickname As New MessageLanguage.nickname
-    Public UserIDCount As UInteger
+
+    Public Class UserCollection
+        Inherits List(Of User)
+        Private UserIDCount As UInteger
+
+        Shadows Sub add(user As User)
+            user.UserID = UserIDCount
+            UserIDCount += 1
+            MyBase.Add(user)
+        End Sub
+    End Class
 
     Public Class User
         Public IpAddress As String
@@ -15,6 +25,7 @@ Public Module Users
         Public Status As MessageLanguage.chatstate
         Public ComputerName As String
         Public key() As Byte
+
         Public UserID As UInteger
         Public Sub New(IpAddress As String, Nickname As MessageLanguage.nickname, Computername As String, key() As Byte)
             Me.IpAddress = IpAddress
@@ -32,15 +43,15 @@ Public Module Users
     End Class
     Public Class ClientChatRoom
         Public HostUser As User 'The user who Hosts the Chat
-        Public ConnecteduserIDs As List(Of UInteger) 'The list of Connected Users to the ChatRoom 
-        Public PendingUserIDs As List(Of UInteger) 'The List of Users that haven't responded to the Request yet
-        Public PendingMessages As List(Of Object) 'All messages that haven't been processed yet
+        Public ConnecteduserIDs As New List(Of UInteger) 'The list of Connected Users to the ChatRoom 
+        Public PendingUserIDs As New List(Of UInteger) 'The List of Users that haven't responded to the Request yet
+        Public PendingMessages As New List(Of Object) 'All messages that haven't been processed yet
         Public ID As UInteger
     End Class
     Public Class HostChatRoom
-        Public ConnectedUserIDs As List(Of UInteger) 'The list of Connected Users to the ChatRoom 
-        Public PendingUsersIDs As List(Of UInteger) 'The List of Users that haven't responded to the Request yet
-        Public PendingMessages As List(Of Object) 'All messages that haven't been processed yet
+        Public ConnectedUserIDs As New List(Of UInteger) 'The list of Connected Users to the ChatRoom 
+        Public PendingUsersIDs As New List(Of UInteger) 'The List of Users that haven't responded to the Request yet
+        Public PendingMessages As New List(Of Object) 'All messages that haven't been processed yet
         Public UserListUpdated As Boolean 'Allows the NewConnectionHelper to flag that the userlist was updated
         Public ID As UInteger
     End Class
@@ -98,8 +109,8 @@ Namespace MessageLanguage
     <Serializable()>
     Public Class ConnectionRequest
         Public ChatRoomID As UInteger
-        Public otherUserIps As List(Of String)
-        Public OtherPendingUserIps As List(Of String)
+        Public otherUserIps As New List(Of String)
+        Public OtherPendingUserIps As New List(Of String)
     End Class
     <Serializable()>
     Class ConnectionRequestAnswer

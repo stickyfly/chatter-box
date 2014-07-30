@@ -35,3 +35,23 @@ E:\Software\chat\WindowsApplication1\bin\Debug\WindowsApplication1.pdb
 E:\Software\chat\WindowsApplication1\bin\Debug\WindowsApplication1.xml
 E:\Software\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.StartForm.resources
 E:\Software\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.ChatForm.resources
+H:\Vb Projects\chat\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.exe
+H:\Vb Projects\chat\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.xml
+H:\Vb Projects\chat\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.pdb
+H:\Vb Projects\chat\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.ChatForm.resources
+H:\Vb Projects\chat\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.StartForm.resources
+H:\Vb Projects\chat\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.Resources.resources
+H:\Vb Projects\chat\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.vbproj.GenerateResource.Cache
+H:\Vb Projects\chat\chat\WindowsApplication1\bin\Debug\WindowsApplication1.exe
+H:\Vb Projects\chat\chat\WindowsApplication1\bin\Debug\WindowsApplication1.pdb
+H:\Vb Projects\chat\chat\WindowsApplication1\bin\Debug\WindowsApplication1.xml
+C:\Users\Laurin\Documents\Vb-Projects\Chatter-Box\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.exe
+C:\Users\Laurin\Documents\Vb-Projects\Chatter-Box\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.xml
+C:\Users\Laurin\Documents\Vb-Projects\Chatter-Box\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.pdb
+C:\Users\Laurin\Documents\Vb-Projects\Chatter-Box\chat\WindowsApplication1\bin\Debug\WindowsApplication1.exe
+C:\Users\Laurin\Documents\Vb-Projects\Chatter-Box\chat\WindowsApplication1\bin\Debug\WindowsApplication1.pdb
+C:\Users\Laurin\Documents\Vb-Projects\Chatter-Box\chat\WindowsApplication1\bin\Debug\WindowsApplication1.xml
+C:\Users\Laurin\Documents\Vb-Projects\Chatter-Box\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.ChatForm.resources
+C:\Users\Laurin\Documents\Vb-Projects\Chatter-Box\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.StartForm.resources
+C:\Users\Laurin\Documents\Vb-Projects\Chatter-Box\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.Resources.resources
+C:\Users\Laurin\Documents\Vb-Projects\Chatter-Box\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.vbproj.GenerateResource.Cache
