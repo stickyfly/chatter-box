@@ -19,7 +19,7 @@ Module Tools
 
         cstream.Close()
     End Sub
-    Function decrypt(stream As System.IO.Stream, ByVal key() As Byte)
+    Function decrypt(stream As System.IO.Stream, ByVal key() As Byte) As Object
 
         Dim cryptStream As CryptoStream
         Dim riji As New System.Security.Cryptography.RijndaelManaged 'Declare CryptoServiceProvider.
@@ -125,17 +125,5 @@ Module Tools
             End If
         Next
         Return Nothing
-    End Function
-    Public Function MatchIDToUser(ByVal UserId As UInteger) As User
-        Return KnownUsers.Where(Function(u As User) u.UserID = UserId).First
-    End Function
-    Public Function MatchIDToUserInt(ByVal UserId As UInteger) As Integer
-        For i = 0 To KnownUsers.Count - 1
-            If KnownUsers(i).UserID = UserId Then
-                Return i
-                Exit Function
-            End If
-        Next
-        Return -1
     End Function
 End Module

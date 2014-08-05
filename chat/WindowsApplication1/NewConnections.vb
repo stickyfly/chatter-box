@@ -56,24 +56,14 @@ Public Module NewConnectionListerner
                     Dim key() As Byte = MatchIpToUserKey(SenderIp)
 
                     If key Is Nothing Then
-                        Dim bytekey = edk.DeriveKeyMaterial(message.key)
-
                         Dim newuser As New User
                         newuser.NickName = message.name
                         newuser.Status = message.Status
-                        newuser.key = bytekey
+                        newuser.key = edk.DeriveKeyMaterial(message.key)
                         newuser.IpAddress = SenderIp
                         newuser.ComputerName = System.Net.Dns.GetHostEntry(newuser.IpAddress).HostName
+                        KnownUsers.Add(newuser)
 
-                        KnownUsers.add(newuser)
-                        RaiseEvent ChatStateArrived(newuser)
-                    Else
-                        Dim UserInt As Integer = MatchIpToUserInt(SenderIp)
-                        KnownUsers(UserInt).Status = message.Status
-                        RaiseEvent ChatStateArrived(MatchIpToUser(SenderIp))
-                    End If
-
-                    If Not NewConnectionHelper.ClientIpConnections.Contains(SenderIp) Then 'if no request sent yet
                         message.key = edk.PublicKey
                         message.Status = chatstate
                         Try
@@ -81,6 +71,13 @@ Public Module NewConnectionListerner
                         Catch ex As Exception
                             MsgBox(ex.Message)
                         End Try
+
+                        RaiseEvent ChatStateArrived(newuser)
+                    Else
+                        Dim UserInt As Integer = MatchIpToUserInt(SenderIp)
+                        KnownUsers(UserInt).Status = message.Status
+                        KnownUsers(UserInt).NickName = message.name
+                        RaiseEvent ChatStateArrived(KnownUsers(UserInt))
                     End If
 
                     disconnect(SenderIp)
@@ -104,7 +101,7 @@ Public Module NewConnectionListerner
                         For i = 0 To message.otherUserIps.Count - 1 'For each joined user...
                             Dim CurrentUserInt As Integer = MatchIpToUserInt(message.otherUserIps(i))
                             If Not CurrentUserInt = -1 Then
-                                ctr.ConnecteduserIDs.Add(KnownUsers(CurrentUserInt).UserID)
+                                ctr.ConnecteduserIndex.Add(KnownUsers(CurrentUserInt).UserID)
                             Else
                                 KnownUsers.add(New User(message.otherUserIps(i), Nothing, Nothing, Nothing)) 'Add UserIp and request full details 
                                 AskforStatusAndEnrypt(message.otherUserIps(i))
@@ -124,10 +121,10 @@ Public Module NewConnectionListerner
                         If ChatRoomsHosting(i).ID = Data.ChatRoomID Then
                             Dim SenderID As UInteger = KnownUsers(MatchIpToUserInt(SenderIp)).UserID
                             If Data.accept Then 'If the connection was accepted
-                                ChatRoomsHosting(i).ConnectedUserIDs.Add(SenderID) 'Then add the user to connectedusers
+                                ChatRoomsHosting(i).ConnectedUserIndex.Add(SenderID) 'Then add the user to connectedusers
                             End If
-                            ChatRoomsHosting(i).PendingUsersIDs.Remove(SenderID) 'remove from pending users
-                            ChatRoomsHosting(i).UserListUpdated = True
+                            ChatRoomsHosting(i).PendingUserIndex.Remove(SenderID) 'remove from pending users
+                            ChatRoomsHosting(i).UserListUpdated = True 'Flag that userlist was up
                             Exit For
                         End If
                     Next
@@ -162,7 +159,7 @@ Public Module NewConnectionListerner
         Public Sub CreateNewChat(ByVal Users As List(Of User))
             Dim ctr As New HostChatRoom
             For i = 0 To Users.Count - 1
-                ctr.PendingUsersIDs.Add(Users(i).UserID)
+                ctr.PendingUserIndex.Add(Users(i).UserID)
             Next
 
             ctr.ID = ChatRoomsHosting.Count
@@ -187,7 +184,7 @@ Public Module NewConnectionListerner
             Dim Con As New MessageLanguage.ConnectionRequest
 
             For i = 0 To ChatRoomsHosting.Count - 1  'create a list of other users in the Chat
-                Con.otherUserIps.Add(MatchIpToUser(ChatRoomsHosting(ChatRoomID).ConnectedUserIDs(i)).IpAddress)
+                Con.otherUserIps.Add(MatchIpToUser(ChatRoomsHosting(ChatRoomID).ConnectedUserIndex(i)).IpAddress)
             Next
 
             Try

@@ -26,11 +26,11 @@ Partial Class ChatForm
         Me.RichTextBox1 = New System.Windows.Forms.RichTextBox()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.Button1 = New System.Windows.Forms.Button()
-        Me.ListBox1 = New System.Windows.Forms.ListBox()
         Me.KickBtn = New System.Windows.Forms.Button()
         Me.BanBtn = New System.Windows.Forms.Button()
         Me.LeaveBtn = New System.Windows.Forms.Button()
         Me.HostLabel = New System.Windows.Forms.Label()
+        Me.CheckedListBox1 = New System.Windows.Forms.CheckedListBox()
         Me.SuspendLayout()
         '
         'Label1
@@ -66,17 +66,9 @@ Partial Class ChatForm
         Me.Button1.Text = "Send"
         Me.Button1.UseVisualStyleBackColor = True
         '
-        'ListBox1
-        '
-        Me.ListBox1.FormattingEnabled = True
-        Me.ListBox1.Location = New System.Drawing.Point(560, 28)
-        Me.ListBox1.Name = "ListBox1"
-        Me.ListBox1.Size = New System.Drawing.Size(160, 108)
-        Me.ListBox1.TabIndex = 7
-        '
         'KickBtn
         '
-        Me.KickBtn.Location = New System.Drawing.Point(560, 138)
+        Me.KickBtn.Location = New System.Drawing.Point(560, 143)
         Me.KickBtn.Name = "KickBtn"
         Me.KickBtn.Size = New System.Drawing.Size(75, 23)
         Me.KickBtn.TabIndex = 8
@@ -85,7 +77,7 @@ Partial Class ChatForm
         '
         'BanBtn
         '
-        Me.BanBtn.Location = New System.Drawing.Point(645, 138)
+        Me.BanBtn.Location = New System.Drawing.Point(645, 143)
         Me.BanBtn.Name = "BanBtn"
         Me.BanBtn.Size = New System.Drawing.Size(75, 23)
         Me.BanBtn.TabIndex = 8
@@ -111,16 +103,24 @@ Partial Class ChatForm
         Me.HostLabel.TabIndex = 9
         Me.HostLabel.Text = "Host:"
         '
+        'CheckedListBox1
+        '
+        Me.CheckedListBox1.FormattingEnabled = True
+        Me.CheckedListBox1.Location = New System.Drawing.Point(560, 28)
+        Me.CheckedListBox1.Name = "CheckedListBox1"
+        Me.CheckedListBox1.Size = New System.Drawing.Size(160, 109)
+        Me.CheckedListBox1.TabIndex = 10
+        '
         'ChatForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(732, 320)
+        Me.Controls.Add(Me.CheckedListBox1)
         Me.Controls.Add(Me.HostLabel)
         Me.Controls.Add(Me.LeaveBtn)
         Me.Controls.Add(Me.BanBtn)
         Me.Controls.Add(Me.KickBtn)
-        Me.Controls.Add(Me.ListBox1)
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.TextBox1)
         Me.Controls.Add(Me.RichTextBox1)
@@ -135,9 +135,9 @@ Partial Class ChatForm
     Friend WithEvents RichTextBox1 As System.Windows.Forms.RichTextBox
     Friend WithEvents TextBox1 As System.Windows.Forms.TextBox
     Friend WithEvents Button1 As System.Windows.Forms.Button
-    Friend WithEvents ListBox1 As System.Windows.Forms.ListBox
     Friend WithEvents KickBtn As System.Windows.Forms.Button
     Friend WithEvents BanBtn As System.Windows.Forms.Button
     Friend WithEvents LeaveBtn As System.Windows.Forms.Button
     Friend WithEvents HostLabel As System.Windows.Forms.Label
+    Friend WithEvents CheckedListBox1 As System.Windows.Forms.CheckedListBox
 End Class

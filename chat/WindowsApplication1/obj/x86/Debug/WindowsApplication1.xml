@@ -39,20 +39,6 @@ WindowsApplication1
 	<param name="colour">The colour in the message</param>
 	<param name="font">The font used</param>
 	<remarks></remarks>
-</member><member name="M:WindowsApplication1.ChatConnections.ChatClientConnection.SendMessage(System.String,System.Drawing.Color,System.Drawing.Font,System.String[])">
-	<summary>
- Sends a message to every Ip Address specified in the conversation
- </summary>
-	<param name="text">The text in the message</param>
-	<param name="colour">The colour in the message</param>
-	<param name="font">The font used</param>
-	<param name="IpAddresses">The Ip Addresses, the message is to be sent to</param>
-	<remarks></remarks>
-</member><member name="M:WindowsApplication1.ChatConnections.ChatClientConnection.UpdateNickname">
-	<summary>
- Refreshes and sends the current Nickname
- </summary>
-	<remarks></remarks>
 </member><member name="M:WindowsApplication1.ChatConnections.ChatHostConnection.SendMessage(System.String,System.Drawing.Color,System.Drawing.Font)">
 	<summary>
  Sends a message to everyone in the conversation
@@ -60,20 +46,6 @@ WindowsApplication1
 	<param name="text">The text in the message</param>
 	<param name="colour">The colour in the message</param>
 	<param name="font">The font used</param>
-	<remarks></remarks>
-</member><member name="M:WindowsApplication1.ChatConnections.ChatHostConnection.SendMessage(System.String,System.Drawing.Color,System.Drawing.Font,System.String[])">
-	<summary>
- Sends a message to every specified Ip Address in the conversation
- </summary>
-	<param name="text">The text in the message</param>
-	<param name="colour">The colour in the message</param>
-	<param name="font">The font used</param>
-	<param name="IpAddresses">The Ip Addresses, the message is to be sent to</param>
-	<remarks></remarks>
-</member><member name="M:WindowsApplication1.ChatConnections.ChatHostConnection.UpdateNickname">
-	<summary>
- Refreshes and sends the current Nickname
- </summary>
 	<remarks></remarks>
 </member><member name="P:WindowsApplication1.My.Resources.Resources.ResourceManager">
 	<summary>

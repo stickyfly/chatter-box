@@ -1,7 +1,7 @@
 ﻿Imports System.Net
 Imports System.Net.Sockets
 
-Module ChatConnections
+Public Module ChatConnections
     Public MustInherit Class ChatConnection
         Protected Const standartport As Integer = 41640
         Protected MyIpAddress As String = getipv4address.ToString
@@ -10,7 +10,6 @@ Module ChatConnections
 
         Public Event PublicMessageArrived(message As MessageLanguage.publicmessage)
         Public Event PrivateMessageArrived(message As MessageLanguage.privatemessage)
-        Public Event NickNameUpdated(IpAddress As String, nickname As MessageLanguage.nickname)
         Public Event UserLeft(user As User)
         Public Event GotBanned(BanMessage As MessageLanguage.banmessage)
         Public Event GotKicked(KickMessage As MessageLanguage.kickmessage)
@@ -20,9 +19,6 @@ Module ChatConnections
         End Sub 'to raise events from inheriting class
         Protected Sub RaisePrivateMessageArrived(message As MessageLanguage.privatemessage)
             RaisePrivateMessageArrived(message)
-        End Sub
-        Protected Sub RaiseNickNameUpdated(IpAddress As String, nickname As MessageLanguage.nickname)
-            RaiseEvent NickNameUpdated(IpAddress, nickname)
         End Sub
         Protected Sub RaiseUserLeft(user As User)
             RaiseEvent UserLeft(user)
@@ -44,9 +40,6 @@ Module ChatConnections
             timer.Interval = 100
             timer.Start()
         End Sub
-
-        MustOverride Sub timertick()
-
         Protected Sub send(ByVal message As Object, user As User)
             Dim thread As New Threading.Thread(Sub() sendaway(message, user))
             thread.Name = "TCP Client send"
@@ -68,20 +61,35 @@ Module ChatConnections
             tcpclient.Close()
         End Sub
 
+        Protected MustOverride Sub timertick()
+        Public MustOverride Sub Leave()
+        Public MustOverride Sub SendMessage(text As String, colour As Color, font As Font)
+        Public MustOverride Sub SendMessage(text As String, colour As Color, font As Font, Users As List(Of User))
+
+        Public Overridable Sub Kickuser(IpAddress As String, Reason As String)
+        End Sub
     End Class
 
 
     Public Class ChatClientConnection
-
         Inherits ChatConnection
+
+        Public Overloads Property ChatRoom() As ClientChatRoom
+            Get
+                Return ChatRoomsJoined(ChatRoomIndex)
+            End Get
+            Set(value As ClientChatRoom)
+                ChatRoomsJoined(ChatRoomIndex) = value
+            End Set
+        End Property
 
         Sub New(ChatRoomIndex As Integer)
             MyBase.New(ChatRoomIndex)
         End Sub
-        Overrides Sub timertick()
-            While ChatRoomsJoined(ChatRoomIndex).PendingMessages.Count > 0
-                process_message(ChatRoomsJoined(ChatRoomIndex).PendingMessages(0))
-                ChatRoomsJoined(ChatRoomIndex).PendingMessages.RemoveAt(0)
+        Protected Overrides Sub timertick()
+            While ChatRoom.PendingMessages.Count > 0
+                process_message(ChatRoom.PendingMessages(0))
+                ChatRoom.PendingMessages.RemoveAt(0)
             End While
         End Sub
 
@@ -93,13 +101,13 @@ Module ChatConnections
         ''' <param name="font">The font used</param>
         ''' <remarks></remarks>
         ''' 
-        Public Sub SendMessage(text As String, colour As Color, font As Font)
+        Public Overrides Sub SendMessage(text As String, colour As Color, font As Font)
             Dim msg As New MessageLanguage.publicmessage
             msg.message = text
             msg.colour = colour
             msg.Font = font
             msg.SenderIp = MyIpAddress
-            send(msg, ChatRoomsJoined(ChatRoomIndex).HostUser)
+            send(msg, ChatRoom.HostUser)
         End Sub
         ''' <summary>
         ''' Sends a message to every Ip Address specified in the conversation
@@ -109,29 +117,24 @@ Module ChatConnections
         ''' <param name="font">The font used</param>
         ''' <param name="IpAddresses">The Ip Addresses, the message is to be sent to</param>
         ''' <remarks></remarks>
-        Public Sub SendMessage(text As String, colour As Color, font As Font, IpAddresses() As String)
+        Public Overrides Sub SendMessage(text As String, colour As Color, font As Font, Users As List(Of User))
             Dim msg As New MessageLanguage.privatemessage
             msg.text = text
             msg.colour = colour
             msg.Font = font
             msg.SenderIp = MyIpAddress
-            msg.ReceiverIp = IpAddresses
-            send(msg, ChatRoomsJoined(ChatRoomIndex).HostUser)
+            Dim ReceiverIps(Users.Count - 1)
+            For i = 0 To Users.Count - 1
+                ReceiverIps(i) = Users(i).IpAddress
+            Next
+            msg.ReceiverIp = ReceiverIps
+            send(msg, ChatRoom.HostUser)
         End Sub
-        ''' <summary>
-        ''' Refreshes and sends the current Nickname
-        ''' </summary>
-        ''' <remarks></remarks>
-        Public Sub UpdateNickname()
-            Dim msg As New MessageLanguage.NicknameChanged
-            msg.Nickname = PersonalNickname
-            msg.SenderIp = MyIpAddress
-            send(msg, ChatRoomsJoined(ChatRoomIndex).HostUser)
-        End Sub
-        Public Sub Leave()
+
+        Public Overrides Sub Leave()
             Dim msg As New MessageLanguage.LeaveMessage
             msg.SenderIp = MyIpAddress
-            send(msg, ChatRoomsJoined(ChatRoomIndex).HostUser)
+            send(msg, ChatRoom.HostUser)
         End Sub
 
         Sub process_message(message As Object)
@@ -140,8 +143,6 @@ Module ChatConnections
                     RaisePublicMessageArrived(message)
                 Case GetType(MessageLanguage.privatemessage)
                     RaisePrivateMessageArrived(message)
-                Case GetType(MessageLanguage.NicknameChanged)
-                    RaiseNickNameUpdated(message.IpAddress, message.Nickname)
                 Case GetType(MessageLanguage.LeaveMessage)
                     Dim userint As Integer = MatchIpToUserInt(message.SenderIp)
                     RaiseUserLeft(KnownUsers(userint))
@@ -206,16 +207,25 @@ Module ChatConnections
     Public Class ChatHostConnection
         Inherits ChatConnection
 
+        Protected Overloads Property ChatRoom() As HostChatRoom
+            Get
+                Return ChatRoomsHosting(ChatRoomIndex)
+            End Get
+            Set(value As HostChatRoom)
+                ChatRoomsHosting(ChatRoomIndex) = value
+            End Set
+        End Property
+
         Sub New(ByVal ChatRomIndex As Integer)
             MyBase.New(ChatRomIndex)
         End Sub
-        Overrides Sub timertick()
-            While ChatRoomsHosting(ChatRoomIndex).PendingMessages.Count > 0
-                process_message(ChatRoomsHosting(ChatRoomIndex).PendingMessages(0))
-                ChatRoomsHosting(ChatRoomIndex).PendingMessages.RemoveAt(0)
+        Protected Overrides Sub timertick()
+            While ChatRoom.PendingMessages.Count > 0
+                process_message(ChatRoom.PendingMessages(0))
+                ChatRoom.PendingMessages.RemoveAt(0)
             End While
-            If ChatRoomsHosting(ChatRoomIndex).UserListUpdated Then
-                For i = 0 To ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs.Count - 1
+            If ChatRoom.UserListUpdated Then 'syncronise userlist
+                For i = 0 To ChatRoom.ConnectedUserIndex.Count - 1
 
                 Next
             End If
@@ -228,7 +238,7 @@ Module ChatConnections
         ''' <param name="colour">The colour in the message</param>
         ''' <param name="font">The font used</param>
         ''' <remarks></remarks>
-        Public Sub SendMessage(text As String, colour As Color, font As Font)
+        Public Overrides Sub SendMessage(text As String, colour As Color, font As Font)
             Dim msg As New MessageLanguage.publicmessage
             msg.message = text
             msg.colour = colour
@@ -244,27 +254,22 @@ Module ChatConnections
         ''' <param name="font">The font used</param>
         ''' <param name="IpAddresses">The Ip Addresses, the message is to be sent to</param>
         ''' <remarks></remarks>
-        Public Sub SendMessage(text As String, colour As Color, font As Font, IpAddresses() As String)
+        Public Overrides Sub SendMessage(text As String, colour As Color, font As Font, users As List(Of User))
             Dim msg As New MessageLanguage.privatemessage
             msg.text = text
             msg.colour = colour
             msg.Font = font
             msg.SenderIp = MyIpAddress
-            msg.ReceiverIp = IpAddresses
-            For i = 0 To IpAddresses.Count - 1
-                send(msg, IpAddresses(i))
+            Dim ReceiverIps(users.Count - 1)
+            For i = 0 To users.Count - 1
+                ReceiverIps(i) = users(i).IpAddress
+            Next
+            msg.ReceiverIp = ReceiverIps
+            For i = 0 To users.Count - 1
+                send(msg, users(i))
             Next
         End Sub
-        ''' <summary>
-        ''' Refreshes and sends the current Nickname
-        ''' </summary>
-        ''' <remarks></remarks>
-        Public Sub UpdateNickname()
-            Dim msg As New MessageLanguage.NicknameChanged
-            msg.Nickname = PersonalNickname
-            msg.SenderIp = MyIpAddress
-            SendEveryone(msg)
-        End Sub
+
         Public Sub BanUser(IpAddress As String, Reason As String, until As Date)
             Dim msg As New MessageLanguage.banmessage
             msg.Reason = Reason
@@ -276,7 +281,7 @@ Module ChatConnections
             msg.Reason = Reason
             send(msg, IpAddress)
         End Sub
-        Public Sub Leave()
+        Public Overrides Sub Leave()
             Dim msg As New MessageLanguage.LeaveMessage
             msg.SenderIp = MyIpAddress
             SendEveryone(msg)
@@ -288,8 +293,6 @@ Module ChatConnections
                     PublicMessage(message, message.SenderIp)
                 Case GetType(MessageLanguage.privatemessage)
                     PrivateMessage(message, message.SenderIp)
-                Case GetType(MessageLanguage.NicknameChanged)
-                    nickname(message, message.SenderIp)
                 Case GetType(MessageLanguage.LeaveMessage)
                     LeaveMessage(message, message.SenderIp)
             End Select
@@ -297,11 +300,11 @@ Module ChatConnections
         Private Sub LeaveMessage(message As MessageLanguage.LeaveMessage, SenderIp As String)
             Dim userint As Integer = MatchIpToUserInt(message.SenderIp)
             RaiseUserLeft(KnownUsers(userint))
-            ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs.RemoveAt(userint)
-            For i = 0 To ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs.Count - 1
+            ChatRoom.ConnectedUserIndex.RemoveAt(userint)
+            For i = 0 To ChatRoom.ConnectedUserIndex.Count - 1
 
-                If Not SenderIp = MatchIDToUser(ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs(i)).IpAddress Then
-                    send(message, ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs(i))
+                If Not SenderIp = KnownUsers(ChatRoom.ConnectedUserIndex(i)).IpAddress Then
+                    send(message, ChatRoom.ConnectedUserIndex(i))
                 End If
             Next
         End Sub
@@ -318,25 +321,17 @@ Module ChatConnections
         Private Sub PublicMessage(message As MessageLanguage.publicmessage, SenderIp As String)
             RaisePublicMessageArrived(message)
             Dim SenderUserInt = MatchIpToUserInt(SenderIp)
-            For i = 0 To ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs.Count - 1
-                If Not SenderUserInt = ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs(i) Then
-                    send(message, MatchIDToUser(ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs(i)).IpAddress)
+            For i = 0 To ChatRoom.ConnectedUserIndex.Count - 1
+                If Not SenderUserInt = ChatRoom.ConnectedUserIndex(i) Then
+                    send(message, ChatRoom.ConnectedUserIndex(i))
                 End If
             Next
         End Sub
-        Private Sub nickname(message As MessageLanguage.NicknameChanged, SenderIp As String)
-            RaiseNickNameUpdated(SenderIp, message.Nickname)
-            Dim SenderInt As Integer = MatchIpToUserInt(SenderIp)
-            For i = 0 To ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs.Count - 1
-                If Not SenderInt = i Then
-                    send(message, MatchIDToUser(ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs(i)))
-                End If
-            Next
-        End Sub
+
         Private Sub SendEveryone(ByVal message As Object)
-            For i = 0 To ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs.Count - 1
+            For i = 0 To ChatRoom.ConnectedUserIndex.Count - 1
                 Dim k As Integer = i
-                Dim thread As New Threading.Thread(Sub() sendaway(message, MatchIDToUser(ChatRoomsHosting(ChatRoomIndex).ConnectedUserIDs(k))))
+                Dim thread As New Threading.Thread(Sub() sendaway(message, KnownUsers(ChatRoom.ConnectedUserIndex(k))))
                 thread.Name = "TCP Client send"
                 thread.Start()
             Next
