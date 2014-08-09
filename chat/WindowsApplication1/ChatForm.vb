@@ -1,26 +1,23 @@
 ﻿Public Class ChatForm
-    Public ChatConnection As ChatConnection
-    Public Property ChatRoom As ChatRoom
+    Public WithEvents ChatConnection As ChatConnection
+    WithEvents listbox As New ColourListBox
+
+    Public Property chatroom As ChatRoom
         Get
-            If GetType(ChatConnection) = GetType(ChatHostConnection) Then
-                Return ChatRoomsHosting(ChatConnection.ChatRoomIndex)
-            Else
-                Return ChatRoomsJoined(ChatConnection.ChatRoomIndex)
-            End If
+            Return ChatConnection.ChatRoom
         End Get
         Set(value As ChatRoom)
-            If GetType(ChatConnection) = GetType(ChatHostConnection) Then
-                ChatRoomsHosting(ChatConnection.ChatRoomIndex) = value
-            Else
-                ChatRoomsJoined(ChatConnection.ChatRoomIndex) = value
-            End If
+            ChatConnection.ChatRoom = value
         End Set
     End Property
     Private Sub ChatForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         ChatConnection.leave()
     End Sub
     Private Sub ChatForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        If ChatRoom.ConnecteduserIndex.Count + ChatRoom.PendingUserIndex.Count = 1 Then
+        listbox.Dock = DockStyle.Fill
+        Panel1.Controls.Add(listbox)
+
+        If chatroom.ConnecteduserIndex.Count + chatroom.PendingUserIndex.Count = 0 Then
             KickBtn.Enabled = False
             BanBtn.Enabled = False
             HostLabel.Text = ""
@@ -37,7 +34,7 @@
         End If
     End Sub
 
-    Private Sub SendBtn_Click(sender As Object, e As EventArgs) Handles Button1.Click
+    Private Sub SendBtn_Click(sender As Object, e As EventArgs) Handles BtnSend.Click
         If CheckedListBox1.CheckedItems.Count = CheckedListBox1.Items.Count Then
             ChatConnection.SendMessage(TextBox1.Text, Color.Black, Nothing)
         Else
@@ -59,16 +56,36 @@
     End Sub
 
     Private Sub TextBox1_KeyPress(sender As Object, e As KeyEventArgs) Handles TextBox1.KeyUp
-        If e.KeyCode = Keys.Enter Then
+        If e.KeyCode = Keys.Enter And BtnSend.Enabled = True Then
             SendBtn_Click(sender, e)
         End If
     End Sub
 
     Private Sub TextBox1_TextChanged(sender As Object, e As EventArgs) Handles TextBox1.TextChanged
-
+        If sender.text = "" Then
+            BtnSend.Enabled = False
+        Else
+            BtnSend.Enabled = True
+        End If
     End Sub
 
     Private Sub CheckedListBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CheckedListBox1.SelectedIndexChanged
+
+    End Sub
+
+    Private Sub MessagePrivate_Arrived(message As MessageLanguage.privatemessage) Handles ChatConnection.PrivateMessageArrived
+        listbox.Items.Add(New ColourListBox.ListboxItem("[" & Now.ToShortTimeString & "] " & message.Text, message.colour, Color.White))
+    End Sub
+    Private Sub MessagePublic_Arrived(message As MessageLanguage.publicmessage) Handles ChatConnection.PublicMessageArrived
+        listbox.Items.Add(New ColourListBox.ListboxItem("[" & Now.ToShortTimeString & "] " & message.Text, message.colour, Color.White))
+    End Sub
+    Private Sub BanMessage_Arrived(message As MessageLanguage.banmessage) Handles ChatConnection.GotBanned
+
+    End Sub
+    Private Sub KickMessage_Arrived(message As MessageLanguage.kickmessage) Handles ChatConnection.GotKicked
+
+    End Sub
+    Private Sub UserLeft(user As User) Handles ChatConnection.UserLeft
 
     End Sub
 End Class

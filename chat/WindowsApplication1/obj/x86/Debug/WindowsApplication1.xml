@@ -6,11 +6,17 @@ WindowsApplication1
 </name>
 </assembly>
 <members>
-<member name="M:WindowsApplication1.NewConnectionListerner.NewConnectionEstablisher.CreateNewChat(System.Collections.Generic.List{WindowsApplication1.Users.User})">
+<member name="M:WindowsApplication1.NewConnections.NewConnectionEstablisher.CreateNewChat(System.Collections.Generic.List{WindowsApplication1.Users.User})">
 	<summary>
  Sends a Chat Request to a known User or a Group
  </summary>
 	<param name="Users"></param>
+	<remarks></remarks>
+</member><member name="M:WindowsApplication1.NewConnections.NewConnectionEstablisher.OpenChatWindow(System.Int32)">
+	<summary>
+ Opens a Client Chat the user was invited to
+ </summary>
+	<param name="ChatRoomIndex">The index of the Chat</param>
 	<remarks></remarks>
 </member><member name="M:WindowsApplication1.Tools.MatchIpToUser(System.String)">
 	<summary>
@@ -31,6 +37,18 @@ WindowsApplication1
  Returns the personal user
  </summary>
 	<remarks></remarks>
+</member><member name="P:WindowsApplication1.ColourListBox.ListboxItem.Text">
+	<summary>
+ sets or returns the Text of the item
+ </summary>
+</member><member name="P:WindowsApplication1.ColourListBox.ListboxItem.Data">
+	<summary>
+ Sets or returns the dataobject of the Item
+ </summary>
+</member><member name="M:WindowsApplication1.ColourListBox.ListboxItem.ToString">
+	<summary>
+ returns the text of the item
+ </summary>
 </member><member name="M:WindowsApplication1.ChatConnections.ChatClientConnection.SendMessage(System.String,System.Drawing.Color,System.Drawing.Font)">
 	<summary>
  Sends a message to everyone in the conversation
@@ -39,6 +57,15 @@ WindowsApplication1
 	<param name="colour">The colour in the message</param>
 	<param name="font">The font used</param>
 	<remarks></remarks>
+</member><member name="M:WindowsApplication1.ChatConnections.ChatClientConnection.SendMessage(System.String,System.Drawing.Color,System.Drawing.Font,System.Collections.Generic.List{WindowsApplication1.Users.User})">
+	<summary>
+ Sends a message to every Ip Address specified in the conversation
+ </summary>
+	<param name="text">The text in the message</param>
+	<param name="colour">The colour in the message</param>
+	<param name="font">The font used</param>
+	<param name="Users">The Users, the message is to be sent to</param>
+	<remarks></remarks>
 </member><member name="M:WindowsApplication1.ChatConnections.ChatHostConnection.SendMessage(System.String,System.Drawing.Color,System.Drawing.Font)">
 	<summary>
  Sends a message to everyone in the conversation
@@ -46,6 +73,15 @@ WindowsApplication1
 	<param name="text">The text in the message</param>
 	<param name="colour">The colour in the message</param>
 	<param name="font">The font used</param>
+	<remarks></remarks>
+</member><member name="M:WindowsApplication1.ChatConnections.ChatHostConnection.SendMessage(System.String,System.Drawing.Color,System.Drawing.Font,System.Collections.Generic.List{WindowsApplication1.Users.User})">
+	<summary>
+ Sends a message to every specified Ip Address in the conversation
+ </summary>
+	<param name="text">The text in the message</param>
+	<param name="colour">The colour in the message</param>
+	<param name="font">The font used</param>
+	<param name="users">The Users, the message is to be sent to</param>
 	<remarks></remarks>
 </member><member name="P:WindowsApplication1.My.Resources.Resources.ResourceManager">
 	<summary>

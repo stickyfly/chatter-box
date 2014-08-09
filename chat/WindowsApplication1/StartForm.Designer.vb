@@ -23,9 +23,8 @@ Partial Class StartForm
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim ListViewItem2 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem(New String() {"asdas", "Hello", "", ""}, -1)
         Me.Button1 = New System.Windows.Forms.Button()
-        Me.ListView1 = New System.Windows.Forms.ListView()
+        Me.ListViewUsers = New System.Windows.Forms.ListView()
         Me.NameHeader = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.StatusHeader = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ComputerNameHeader = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -37,8 +36,14 @@ Partial Class StartForm
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.ListViewGroups = New System.Windows.Forms.ListView()
+        Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
+        Me.TabPage2.SuspendLayout()
         Me.SuspendLayout()
         '
         'Button1
@@ -47,24 +52,22 @@ Partial Class StartForm
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(89, 50)
         Me.Button1.TabIndex = 0
-        Me.Button1.Text = "Search for other users"
+        Me.Button1.Text = "&Search for other users"
         Me.Button1.UseVisualStyleBackColor = True
         '
-        'ListView1
+        'ListViewUsers
         '
-        Me.ListView1.AllowColumnReorder = True
-        Me.ListView1.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.ListView1.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.NameHeader, Me.StatusHeader, Me.ComputerNameHeader, Me.IpHeader})
-        Me.ListView1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ListView1.FullRowSelect = True
-        ListViewItem2.UseItemStyleForSubItems = False
-        Me.ListView1.Items.AddRange(New System.Windows.Forms.ListViewItem() {ListViewItem2})
-        Me.ListView1.Location = New System.Drawing.Point(3, 3)
-        Me.ListView1.Name = "ListView1"
-        Me.ListView1.Size = New System.Drawing.Size(315, 160)
-        Me.ListView1.TabIndex = 1
-        Me.ListView1.UseCompatibleStateImageBehavior = False
-        Me.ListView1.View = System.Windows.Forms.View.Details
+        Me.ListViewUsers.AllowColumnReorder = True
+        Me.ListViewUsers.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.ListViewUsers.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.NameHeader, Me.StatusHeader, Me.ComputerNameHeader, Me.IpHeader})
+        Me.ListViewUsers.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.ListViewUsers.FullRowSelect = True
+        Me.ListViewUsers.Location = New System.Drawing.Point(3, 3)
+        Me.ListViewUsers.Name = "ListViewUsers"
+        Me.ListViewUsers.Size = New System.Drawing.Size(315, 160)
+        Me.ListViewUsers.TabIndex = 1
+        Me.ListViewUsers.UseCompatibleStateImageBehavior = False
+        Me.ListViewUsers.View = System.Windows.Forms.View.Details
         '
         'NameHeader
         '
@@ -101,7 +104,7 @@ Partial Class StartForm
         Me.BtnChat.Name = "BtnChat"
         Me.BtnChat.Size = New System.Drawing.Size(82, 35)
         Me.BtnChat.TabIndex = 3
-        Me.BtnChat.Text = "Open Chat"
+        Me.BtnChat.Text = "&Open Chat"
         Me.ToolTip1.SetToolTip(Me.BtnChat, "Chat to the selected user(s)")
         Me.BtnChat.UseVisualStyleBackColor = True
         '
@@ -112,7 +115,7 @@ Partial Class StartForm
         Me.BtnIgnore.Name = "BtnIgnore"
         Me.BtnIgnore.Size = New System.Drawing.Size(82, 35)
         Me.BtnIgnore.TabIndex = 3
-        Me.BtnIgnore.Text = "Ignore"
+        Me.BtnIgnore.Text = "&Ignore"
         Me.ToolTip1.SetToolTip(Me.BtnIgnore, "Ignore and hide conversation")
         Me.BtnIgnore.UseVisualStyleBackColor = True
         Me.BtnIgnore.Visible = False
@@ -129,7 +132,7 @@ Partial Class StartForm
         '
         'TabPage1
         '
-        Me.TabPage1.Controls.Add(Me.ListView1)
+        Me.TabPage1.Controls.Add(Me.ListViewUsers)
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
@@ -140,6 +143,7 @@ Partial Class StartForm
         '
         'TabPage2
         '
+        Me.TabPage2.Controls.Add(Me.ListViewGroups)
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
@@ -147,6 +151,38 @@ Partial Class StartForm
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "Group Chats"
         Me.TabPage2.UseVisualStyleBackColor = True
+        '
+        'ListViewGroups
+        '
+        Me.ListViewGroups.AllowColumnReorder = True
+        Me.ListViewGroups.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.ListViewGroups.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2, Me.ColumnHeader3, Me.ColumnHeader4})
+        Me.ListViewGroups.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.ListViewGroups.FullRowSelect = True
+        Me.ListViewGroups.Location = New System.Drawing.Point(3, 3)
+        Me.ListViewGroups.Name = "ListViewGroups"
+        Me.ListViewGroups.Size = New System.Drawing.Size(315, 160)
+        Me.ListViewGroups.TabIndex = 2
+        Me.ListViewGroups.UseCompatibleStateImageBehavior = False
+        Me.ListViewGroups.View = System.Windows.Forms.View.Details
+        '
+        'ColumnHeader1
+        '
+        Me.ColumnHeader1.Text = "Name"
+        Me.ColumnHeader1.Width = 101
+        '
+        'ColumnHeader2
+        '
+        Me.ColumnHeader2.Text = "Status"
+        Me.ColumnHeader2.Width = 86
+        '
+        'ColumnHeader3
+        '
+        Me.ColumnHeader3.Text = "Users"
+        '
+        'ColumnHeader4
+        '
+        Me.ColumnHeader4.Text = "Host"
         '
         'StartForm
         '
@@ -163,11 +199,12 @@ Partial Class StartForm
         Me.Text = "Chatter Box"
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
+        Me.TabPage2.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
     Friend WithEvents Button1 As System.Windows.Forms.Button
-    Friend WithEvents ListView1 As System.Windows.Forms.ListView
+    Friend WithEvents ListViewUsers As System.Windows.Forms.ListView
     Friend WithEvents ScanProgress As System.Windows.Forms.ProgressBar
     Friend WithEvents NameHeader As System.Windows.Forms.ColumnHeader
     Friend WithEvents IpHeader As System.Windows.Forms.ColumnHeader
@@ -179,5 +216,10 @@ Partial Class StartForm
     Friend WithEvents TabControl1 As System.Windows.Forms.TabControl
     Friend WithEvents TabPage1 As System.Windows.Forms.TabPage
     Friend WithEvents TabPage2 As System.Windows.Forms.TabPage
+    Friend WithEvents ListViewGroups As System.Windows.Forms.ListView
+    Friend WithEvents ColumnHeader1 As System.Windows.Forms.ColumnHeader
+    Friend WithEvents ColumnHeader2 As System.Windows.Forms.ColumnHeader
+    Friend WithEvents ColumnHeader3 As System.Windows.Forms.ColumnHeader
+    Friend WithEvents ColumnHeader4 As System.Windows.Forms.ColumnHeader
 
 End Class

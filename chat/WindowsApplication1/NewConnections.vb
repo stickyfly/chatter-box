@@ -2,16 +2,17 @@
 Imports System.Runtime.Serialization
 Imports System.Net
 
-Public Module NewConnectionListerner
+Public Module NewConnections
     Public Class NewConnectionEstablisher
         Const standartport As Integer = 41639
 
+        Dim MyIpaddress As String = getipv4address.ToString
         Dim port_ As Integer
 
         Public chatstate As MessageLanguage.chatstate
 
         Public Event ChatStateArrived(user As User)
-        Public Event connection_request(ByRef accept As Boolean, user As User, ByVal otheruserIps As List(Of String))
+        Public Event connection_request(ByVal ChatroomId As Integer, user As User, ByVal otheruserIps As List(Of String))
 
         Dim edk As New System.Security.Cryptography.ECDiffieHellmanCng
 
@@ -53,16 +54,16 @@ Public Module NewConnectionListerner
                 Case GetType(MessageLanguage.KeyAndState)
                     Dim message As MessageLanguage.KeyAndState = Data
 
-                    Dim key() As Byte = MatchIpToUserKey(SenderIp)
+                    Dim userint As Integer = MatchIpToUserInt(SenderIp)
 
-                    If key Is Nothing Then
+                    If userint = -1 Or KnownUsers(userint).key Is Nothing Then
                         Dim newuser As New User
                         newuser.NickName = message.name
                         newuser.Status = message.Status
                         newuser.key = edk.DeriveKeyMaterial(message.key)
                         newuser.IpAddress = SenderIp
                         newuser.ComputerName = System.Net.Dns.GetHostEntry(newuser.IpAddress).HostName
-                        KnownUsers.Add(newuser)
+                        KnownUsers.add(newuser)
 
                         message.key = edk.PublicKey
                         message.Status = chatstate
@@ -74,7 +75,6 @@ Public Module NewConnectionListerner
 
                         RaiseEvent ChatStateArrived(newuser)
                     Else
-                        Dim UserInt As Integer = MatchIpToUserInt(SenderIp)
                         KnownUsers(UserInt).Status = message.Status
                         KnownUsers(UserInt).NickName = message.name
                         RaiseEvent ChatStateArrived(KnownUsers(UserInt))
@@ -83,45 +83,57 @@ Public Module NewConnectionListerner
                     disconnect(SenderIp)
                 Case GetType(MessageLanguage.ConnectionRequest)
                     Dim message As MessageLanguage.ConnectionRequest = Data
-                    Dim connect As Boolean = True
-                    RaiseEvent connection_request(connect, MatchIpToUser(SenderIp), message.otherUserIps)
+                    Dim AllIps As List(Of String) = message.otherUserIps
+                    AllIps.AddRange(message.OtherPendingUserIps)
 
-                    Dim ca As New MessageLanguage.ConnectionRequestAnswer
-                    ca.accept = connect
-                    Try
-                        send(ca, SenderIp)
-                    Catch ex As Exception
-                        MsgBox(ex.Message)
-                    End Try
-                    If connect Then
-                        Dim ctr As New ClientChatRoom
-                        ctr.HostUser = MatchIpToUser(SenderIp) 'The hostuser
-                        ctr.ID = message.ChatRoomID 'The Host's ChatRoomID
-
-                        For i = 0 To message.otherUserIps.Count - 1 'For each joined user...
-                            Dim CurrentUserInt As Integer = MatchIpToUserInt(message.otherUserIps(i))
-                            If Not CurrentUserInt = -1 Then
-                                ctr.ConnecteduserIndex.Add(KnownUsers(CurrentUserInt).UserID)
-                            Else
-                                KnownUsers.add(New User(message.otherUserIps(i), Nothing, Nothing, Nothing)) 'Add UserIp and request full details 
-                                AskforStatusAndEnrypt(message.otherUserIps(i))
-                            End If
-                        Next
-
-                        ChatRoomsJoined.Add(ctr)
-                        Dim chatwindow As New ChatForm
-                        chatwindow.ChatConnection = New ChatClientConnection(ChatRoomsJoined.Count - 1)
-                        chatwindow.Show()
+                    If AllIps.Count = 1 Then 'If convo is one on one...
+                        Dim CA As New MessageLanguage.ConnectionRequestAnswer
+                        CA.accept = True
+                        CA.ChatRoomID = message.ChatRoomID
+                        Try
+                            send(CA, SenderIp)
+                        Catch ex As Exception
+                            MsgBox(ex.Message)
+                        End Try
                     End If
 
+                    RaiseEvent connection_request(message.ChatRoomID, MatchIpToUser(SenderIp), AllIps)
+
+                    Dim ctr As New ClientChatRoom
+                    ctr.HostUser = MatchIpToUser(SenderIp) 'The hostuser
+                    ctr.ID = message.ChatRoomID 'The Host's ChatRoomID
+
+                    For i = 0 To message.otherUserIps.Count - 1 'For each joined user...
+                        Dim CurrentUserInt As Integer = MatchIpToUserInt(message.otherUserIps(i))
+                        If Not CurrentUserInt = -1 Then
+                            ctr.ConnecteduserIndex.Add(KnownUsers(CurrentUserInt).UserID)
+                        Else
+                            KnownUsers.add(New User(message.otherUserIps(i), Nothing, Nothing, Nothing)) 'Add UserIp and request full details 
+                            AskforStatusAndEnrypt(message.otherUserIps(i))
+                            ctr.ConnecteduserIndex.Add(KnownUsers.Count - 1) 'Add to Knownuserlist
+                        End If
+                    Next
+                    For i = 0 To message.OtherPendingUserIps.Count - 1 'Same for users that havent joined yet...
+                        Dim CurrentUserInt As Integer = MatchIpToUserInt(message.OtherPendingUserIps(i))
+                        If Not CurrentUserInt = -1 Then
+                            ctr.PendingUserIndex.Add(KnownUsers(CurrentUserInt).UserID)
+                        Else
+                            KnownUsers.add(New User(message.OtherPendingUserIps(i), Nothing, Nothing, Nothing)) 'Add UserIp and request full details 
+                            AskforStatusAndEnrypt(message.OtherPendingUserIps(i))
+                            ctr.PendingUserIndex.Add(KnownUsers.Count - 1)
+                        End If
+                    Next
+                    ChatRoomsJoined.Add(ctr)
+
                 Case GetType(MessageLanguage.ConnectionRequestAnswer)
+                    Dim message As MessageLanguage.ConnectionRequestAnswer = Data
                     Dim cra As New MessageLanguage.ConnectionRequestAnswer
 
                     For i = 0 To ChatRoomsHosting.Count - 1 'Match the chatroom Id to chatroom
-                        If ChatRoomsHosting(i).ID = Data.ChatRoomID Then
+                        If ChatRoomsHosting(i).ID = message.ChatRoomID Then
                             Dim SenderID As UInteger = KnownUsers(MatchIpToUserInt(SenderIp)).UserID
-                            If Data.accept Then 'If the connection was accepted
-                                ChatRoomsHosting(i).ConnectedUserIndex.Add(SenderID) 'Then add the user to connectedusers
+                            If message.accept And ChatRoomsHosting(i).PendingUserIndex.Count + ChatRoomsHosting(i).ConnecteduserIndex.Count <> 1 Then 'If the connection was accepted and not one on one
+                                ChatRoomsHosting(i).ConnecteduserIndex.Add(SenderID) 'Then add the user to connectedusers
                             End If
                             ChatRoomsHosting(i).PendingUserIndex.Remove(SenderID) 'remove from pending users
                             ChatRoomsHosting(i).UserListUpdated = True 'Flag that userlist was up
@@ -158,22 +170,31 @@ Public Module NewConnectionListerner
         ''' <remarks></remarks>
         Public Sub CreateNewChat(ByVal Users As List(Of User))
             Dim ctr As New HostChatRoom
-            For i = 0 To Users.Count - 1
-                ctr.PendingUserIndex.Add(Users(i).UserID)
-            Next
+            If Not Users.Count = 1 Then 'If it is not a one on one convo
+                For i = 0 To Users.Count - 1
+                    ctr.PendingUserIndex.Add(Users(i).UserID) 'Add the all users as pending
+                Next
+            Else
+                ctr.ConnecteduserIndex.Add(Users(0).UserID) 'else show as connected, becauset is  one on one convo
+            End If
 
             ctr.ID = ChatRoomsHosting.Count
             ChatRoomsHosting.Add(ctr)
 
-            'Get new ChatWindows...
-            Dim con As New MessageLanguage.ConnectionRequest
 
+            Dim con As New MessageLanguage.ConnectionRequest
             For i = 0 To Users.Count - 1  'create a list of other userIps in the Chat
-                con.otherUserIps.Add(Users(i).IpAddress)
+                con.OtherPendingUserIps.Add(Users(i).IpAddress)
             Next
 
+            Dim ctf As New ChatForm
+            ctf.ChatConnection = New ChatHostConnection(ChatRoomsHosting.Count - 1)
+            ctf.Show()
             For i = 0 To Users.Count - 1
+                Dim newcon As MessageLanguage.ConnectionRequest = con 'make a new variable, because threading is a shit otherwhise
+                newcon.OtherPendingUserIps.RemoveAt(i)
                 Try
+
                     send(con, Users(i))
                 Catch ex As Exception
                     MsgBox(ex.Message)
@@ -193,12 +214,30 @@ Public Module NewConnectionListerner
 
             End Try
         End Sub
-        Private Sub send(ByVal message As Object, user As User)
+        ''' <summary>
+        ''' Opens a Client Chat the user was invited to
+        ''' </summary>
+        ''' <param name="ChatRoomIndex">The index of the Chat</param>
+        ''' <remarks></remarks>
+        Public Sub OpenChatWindow(ChatRoomIndex As Integer)
+            Dim ca As New MessageLanguage.ConnectionRequestAnswer
+            ca.accept = True
+            Try
+                send(ca, ChatRoomsJoined(ChatRoomIndex).HostUser.IpAddress)
+            Catch ex As Exception
+                MsgBox(ex.Message)
+            End Try
+            Dim chatwindow As New ChatForm
+            chatwindow.Text = "Client"
+            chatwindow.ChatConnection = New ChatClientConnection(ChatRoomIndex)
+            chatwindow.Show()
+        End Sub
+        Private Sub send(ByVal message As Object, ByVal user As User)
             Dim thread As New Threading.Thread(Sub() sendaway(message, user))
             thread.Name = "TCP Client send"
             thread.Start()
         End Sub
-        Private Sub send(ByVal message As Object, IpAddress As String)
+        Private Sub send(ByVal message As Object, ByVal IpAddress As String)
             Dim thread As New Threading.Thread(Sub() sendaway(message, MatchIpToUser(IpAddress)))
             thread.Name = "TCP Client send"
             thread.Start()

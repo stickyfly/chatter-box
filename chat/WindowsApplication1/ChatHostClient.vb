@@ -40,12 +40,12 @@ Public Module ChatConnections
             timer.Interval = 100
             timer.Start()
         End Sub
-        Protected Sub send(ByVal message As Object, user As User)
+        Public Sub send(ByVal message As Object, user As User)
             Dim thread As New Threading.Thread(Sub() sendaway(message, user))
             thread.Name = "TCP Client send"
             thread.Start()
         End Sub
-        Protected Sub send(ByVal message As Object, IpAddress As String)
+        Public Sub send(ByVal message As Object, IpAddress As String)
             Dim thread As New Threading.Thread(Sub() sendaway(message, MatchIpToUser(IpAddress)))
             thread.Name = "TCP Client send"
             thread.Start()
@@ -65,7 +65,7 @@ Public Module ChatConnections
         Public MustOverride Sub Leave()
         Public MustOverride Sub SendMessage(text As String, colour As Color, font As Font)
         Public MustOverride Sub SendMessage(text As String, colour As Color, font As Font, Users As List(Of User))
-
+        Public MustOverride Property ChatRoom
         Public Overridable Sub Kickuser(IpAddress As String, Reason As String)
         End Sub
     End Class
@@ -73,12 +73,11 @@ Public Module ChatConnections
 
     Public Class ChatClientConnection
         Inherits ChatConnection
-
-        Public Overloads Property ChatRoom() As ClientChatRoom
+        Public Overrides Property ChatRoom()
             Get
                 Return ChatRoomsJoined(ChatRoomIndex)
             End Get
-            Set(value As ClientChatRoom)
+            Set(value)
                 ChatRoomsJoined(ChatRoomIndex) = value
             End Set
         End Property
@@ -103,11 +102,11 @@ Public Module ChatConnections
         ''' 
         Public Overrides Sub SendMessage(text As String, colour As Color, font As Font)
             Dim msg As New MessageLanguage.publicmessage
-            msg.message = text
+            msg.Text = text
             msg.colour = colour
             msg.Font = font
             msg.SenderIp = MyIpAddress
-            send(msg, ChatRoom.HostUser)
+            send(msg, ChatRoom.hostUser)
         End Sub
         ''' <summary>
         ''' Sends a message to every Ip Address specified in the conversation
@@ -115,11 +114,11 @@ Public Module ChatConnections
         ''' <param name="text">The text in the message</param>
         ''' <param name="colour">The colour in the message</param>
         ''' <param name="font">The font used</param>
-        ''' <param name="IpAddresses">The Ip Addresses, the message is to be sent to</param>
+        ''' <param name="Users">The Users, the message is to be sent to</param>
         ''' <remarks></remarks>
         Public Overrides Sub SendMessage(text As String, colour As Color, font As Font, Users As List(Of User))
             Dim msg As New MessageLanguage.privatemessage
-            msg.text = text
+            msg.Text = text
             msg.colour = colour
             msg.Font = font
             msg.SenderIp = MyIpAddress
@@ -144,8 +143,7 @@ Public Module ChatConnections
                 Case GetType(MessageLanguage.privatemessage)
                     RaisePrivateMessageArrived(message)
                 Case GetType(MessageLanguage.LeaveMessage)
-                    Dim userint As Integer = MatchIpToUserInt(message.SenderIp)
-                    RaiseUserLeft(KnownUsers(userint))
+                    RaiseUserLeft(MatchIpToUser(message.SenderIp))
                 Case GetType(MessageLanguage.kickmessage)
                     RaiseGotKicked(message)
                 Case GetType(MessageLanguage.banmessage)
@@ -206,12 +204,11 @@ Public Module ChatConnections
 
     Public Class ChatHostConnection
         Inherits ChatConnection
-
-        Protected Overloads Property ChatRoom() As HostChatRoom
+        Public Overrides Property ChatRoom()
             Get
                 Return ChatRoomsHosting(ChatRoomIndex)
             End Get
-            Set(value As HostChatRoom)
+            Set(value)
                 ChatRoomsHosting(ChatRoomIndex) = value
             End Set
         End Property
@@ -240,7 +237,7 @@ Public Module ChatConnections
         ''' <remarks></remarks>
         Public Overrides Sub SendMessage(text As String, colour As Color, font As Font)
             Dim msg As New MessageLanguage.publicmessage
-            msg.message = text
+            msg.Text = text
             msg.colour = colour
             msg.Font = font
             msg.SenderIp = MyIpAddress
@@ -252,11 +249,11 @@ Public Module ChatConnections
         ''' <param name="text">The text in the message</param>
         ''' <param name="colour">The colour in the message</param>
         ''' <param name="font">The font used</param>
-        ''' <param name="IpAddresses">The Ip Addresses, the message is to be sent to</param>
+        ''' <param name="users">The Users, the message is to be sent to</param>
         ''' <remarks></remarks>
         Public Overrides Sub SendMessage(text As String, colour As Color, font As Font, users As List(Of User))
             Dim msg As New MessageLanguage.privatemessage
-            msg.text = text
+            msg.Text = text
             msg.colour = colour
             msg.Font = font
             msg.SenderIp = MyIpAddress
@@ -276,7 +273,7 @@ Public Module ChatConnections
             msg.until = until
             send(msg, IpAddress)
         End Sub
-        Public Sub KickUser(IpAddress As String, Reason As String)
+        Public Overrides Sub KickUser(IpAddress As String, Reason As String)
             Dim msg As New MessageLanguage.kickmessage
             msg.Reason = Reason
             send(msg, IpAddress)
