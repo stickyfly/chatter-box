@@ -75,11 +75,6 @@ Namespace MessageLanguage
         Public ChatRoomID As UInteger
         Public Reason As String
     End Class
-    <Serializable()> Public Class banmessage
-        Public ChatRoomID As UInteger
-        Public Reason As String
-        Public until As Date
-    End Class
     <Serializable()> Public Class LeaveMessage
         Public ChatRoomID As UInteger
         Public SenderIp As String
@@ -93,7 +88,7 @@ Namespace MessageLanguage
     Public Class nickname
         Public font As Font
         Public colour As Color
-        Public name As String
+        Public name As String = ""
     End Class
     <Serializable()>
     Public Class ConnectionRequest
@@ -141,100 +136,78 @@ Public Class ColourListBox
             Else          
                 FCB.Color = Li.ForeColor
                 BCB.Color = Li.BackColor
-        End If
+            End If
             Dim ind As Integer = Li.Text.IndexOf(" ")
             Dim time As String = Li.Text.Substring(0, ind)
             Dim Message As String = Li.Text.Substring(ind + 1)
 
             Dim NewX As Integer = Gr.MeasureString(time, e.Font).Width
+            Dim sf As New StringFormat()
+            sf.Trimming = StringTrimming.Word
+            sf.Alignment = Li.Allignment
 
             Gr.FillRectangle(BCB, Rct)
             Gr.FillRectangle(Brushes.White, New Rectangle(Rct.X, Rct.Y, NewX, Rct.Height))
+
             Gr.DrawString(time, e.Font, Brushes.Black, Rct.X, Rct.Y)
-            Gr.DrawString(Message, e.Font, FCB, Rct.X + NewX, Rct.Y)
+            If sf.Alignment = StringAlignment.Near Then
+                NewX = Rct.X + NewX
+            Else
+                NewX = Rct.Right
+            End If
+            Gr.DrawString(Message, e.Font, FCB, NewX, Rct.Y, sf)
         End If
     End Sub
 
     Public Class ListboxItem
 
-        Private m_Text As String
-        Private m_Data As Object
-        Private m_ForeColor As Color
-        Private m_BackColor As Color
-
         ''' <summary>
         ''' sets or returns the Text of the item
         ''' </summary>
         Public Property Text() As String
-            Get
-                Text = m_Text
-            End Get
-            Set(ByVal value As String)
-                m_Text = value
-            End Set
-        End Property
-        Public Property BackColor() As Color
-            Get
-                Return m_BackColor
-            End Get
-            Set(value As Color)
-                m_BackColor = value
-            End Set
-        End Property
         ''' <summary>
-        ''' Sets or returns the dataobject of the Item
+        ''' Sets or Gets the ForeColor of the Item
         ''' </summary>
-        Public Property Data() As Object
-            Get
-                Data = m_Data
-            End Get
-            Set(ByVal value As Object)
-                m_Data = value
-            End Set
-        End Property
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Property BackColor() As Color = Color.Black
 
-        Public Property ForeColor() As Color
-            Get
-                Return m_ForeColor
-            End Get
-            Set(ByVal value As Color)
-                m_ForeColor = value
-            End Set
-        End Property
+        Public Property ForeColor() As Color = Color.White
+
+        Public Property Allignment As StringAlignment = StringAlignment.Near
+
+        Public Property Tag As Object
 
         ''' <summary>
         ''' returns the text of the item
         ''' </summary>
         Public Overrides Function ToString() As String
-            Return m_Text
+            Return Text
         End Function
 
         Public Sub New()
         End Sub
 
-        Public Sub New(ByVal mText As String)
-            m_Text = mText
-            m_BackColor = Color.White
-            m_ForeColor = Color.Black
+        Public Sub New(ByVal Text As String)
+            Me.Text = Text
         End Sub
 
         Public Sub New(ByVal Text As String, ByVal ForeColour As Color)
-            m_ForeColor = ForeColour
-            m_BackColor = Color.White
+            Me.ForeColor = ForeColour
         End Sub
 
-        Public Sub New(ByVal mText As String, ByVal ForeColour As Color, ByVal BackColour As Color)
-            m_Text = mText
-            m_BackColor = BackColour
-            m_ForeColor = ForeColour
+        Public Sub New(ByVal Text As String, ByVal ForeColour As Color, ByVal BackColour As Color)
+            Me.Text = Text
+            Me.BackColor = BackColour
+            Me.ForeColor = ForeColour
         End Sub
 
-        Public Sub New(ByVal mText As String, ByVal mData As Object, ByVal ForeColor As Color, ByVal BackColour As Color)
-            m_Text = mText
-            m_Data = mData
-            m_BackColor = BackColour
-            m_ForeColor = ForeColor
+        Public Sub New(ByVal Text As String, ByVal ForeColour As Color, ByVal BackColour As Color, ByVal Allignment As StringAlignment)
+            Me.Text = Text
+            Me.ForeColor = ForeColour
+            Me.BackColor = BackColour
+            Me.Allignment = Allignment
         End Sub
-
     End Class
 End Class

@@ -41,10 +41,13 @@ WindowsApplication1
 	<summary>
  sets or returns the Text of the item
  </summary>
-</member><member name="P:WindowsApplication1.ColourListBox.ListboxItem.Data">
+</member><member name="P:WindowsApplication1.ColourListBox.ListboxItem.BackColor">
 	<summary>
- Sets or returns the dataobject of the Item
+ Sets or Gets the ForeColor of the Item
  </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
 </member><member name="M:WindowsApplication1.ColourListBox.ListboxItem.ToString">
 	<summary>
  returns the text of the item
@@ -82,6 +85,13 @@ WindowsApplication1
 	<param name="colour">The colour in the message</param>
 	<param name="font">The font used</param>
 	<param name="users">The Users, the message is to be sent to</param>
+	<remarks></remarks>
+</member><member name="M:WindowsApplication1.ChatConnections.ChatHostConnection.SendEveryone(System.Object,WindowsApplication1.Users.User)">
+	<summary>
+ Sends A message to everyone in the chatroom but one User
+ </summary>
+	<param name="message"></param>
+	<param name="But"></param>
 	<remarks></remarks>
 </member><member name="P:WindowsApplication1.My.Resources.Resources.ResourceManager">
 	<summary>

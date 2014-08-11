@@ -26,7 +26,6 @@ Partial Class ChatForm
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.BtnSend = New System.Windows.Forms.Button()
         Me.KickBtn = New System.Windows.Forms.Button()
-        Me.BanBtn = New System.Windows.Forms.Button()
         Me.LeaveBtn = New System.Windows.Forms.Button()
         Me.HostLabel = New System.Windows.Forms.Label()
         Me.CheckedListBox1 = New System.Windows.Forms.CheckedListBox()
@@ -63,19 +62,10 @@ Partial Class ChatForm
         '
         Me.KickBtn.Location = New System.Drawing.Point(560, 143)
         Me.KickBtn.Name = "KickBtn"
-        Me.KickBtn.Size = New System.Drawing.Size(75, 23)
+        Me.KickBtn.Size = New System.Drawing.Size(160, 23)
         Me.KickBtn.TabIndex = 8
         Me.KickBtn.Text = "Kick"
         Me.KickBtn.UseVisualStyleBackColor = True
-        '
-        'BanBtn
-        '
-        Me.BanBtn.Location = New System.Drawing.Point(645, 143)
-        Me.BanBtn.Name = "BanBtn"
-        Me.BanBtn.Size = New System.Drawing.Size(75, 23)
-        Me.BanBtn.TabIndex = 8
-        Me.BanBtn.Text = "Ban"
-        Me.BanBtn.UseVisualStyleBackColor = True
         '
         'LeaveBtn
         '
@@ -120,7 +110,6 @@ Partial Class ChatForm
         Me.Controls.Add(Me.CheckedListBox1)
         Me.Controls.Add(Me.HostLabel)
         Me.Controls.Add(Me.LeaveBtn)
-        Me.Controls.Add(Me.BanBtn)
         Me.Controls.Add(Me.KickBtn)
         Me.Controls.Add(Me.BtnSend)
         Me.Controls.Add(Me.TextBox1)
@@ -135,7 +124,6 @@ Partial Class ChatForm
     Friend WithEvents TextBox1 As System.Windows.Forms.TextBox
     Friend WithEvents BtnSend As System.Windows.Forms.Button
     Friend WithEvents KickBtn As System.Windows.Forms.Button
-    Friend WithEvents BanBtn As System.Windows.Forms.Button
     Friend WithEvents LeaveBtn As System.Windows.Forms.Button
     Friend WithEvents HostLabel As System.Windows.Forms.Label
     Friend WithEvents CheckedListBox1 As System.Windows.Forms.CheckedListBox

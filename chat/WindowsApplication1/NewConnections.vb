@@ -56,7 +56,13 @@ Public Module NewConnections
 
                     Dim userint As Integer = MatchIpToUserInt(SenderIp)
 
-                    If userint = -1 Or KnownUsers(userint).key Is Nothing Then
+                    Dim isNewUser As Boolean
+                    If userint = -1 Then
+                        isNewUser = True
+                    ElseIf KnownUsers(userint).key Is Nothing Then
+                        isNewUser = True
+                    End If
+                    If isNewUser Then
                         Dim newuser As New User
                         newuser.NickName = message.name
                         newuser.Status = message.Status
@@ -75,9 +81,9 @@ Public Module NewConnections
 
                         RaiseEvent ChatStateArrived(newuser)
                     Else
-                        KnownUsers(UserInt).Status = message.Status
-                        KnownUsers(UserInt).NickName = message.name
-                        RaiseEvent ChatStateArrived(KnownUsers(UserInt))
+                        KnownUsers(userint).Status = message.Status
+                        KnownUsers(userint).NickName = message.name
+                        RaiseEvent ChatStateArrived(KnownUsers(userint))
                     End If
 
                     disconnect(SenderIp)

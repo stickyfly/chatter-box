@@ -11,7 +11,6 @@ Public Module ChatConnections
         Public Event PublicMessageArrived(message As MessageLanguage.publicmessage)
         Public Event PrivateMessageArrived(message As MessageLanguage.privatemessage)
         Public Event UserLeft(user As User)
-        Public Event GotBanned(BanMessage As MessageLanguage.banmessage)
         Public Event GotKicked(KickMessage As MessageLanguage.kickmessage)
 
         Protected Sub RaisePublicMessageArrived(message As MessageLanguage.publicmessage)
@@ -25,9 +24,6 @@ Public Module ChatConnections
         End Sub
         Protected Sub RaiseGotKicked(KickMessage As MessageLanguage.kickmessage)
             RaiseEvent GotKicked(KickMessage)
-        End Sub
-        Protected Sub RaiseGotBanned(BanMessage As MessageLanguage.banmessage)
-            RaiseEvent GotBanned(BanMessage)
         End Sub
 
         Sub New(ByVal ChatRomIndex As Integer)
@@ -146,8 +142,6 @@ Public Module ChatConnections
                     RaiseUserLeft(MatchIpToUser(message.SenderIp))
                 Case GetType(MessageLanguage.kickmessage)
                     RaiseGotKicked(message)
-                Case GetType(MessageLanguage.banmessage)
-                    RaiseGotBanned(message)
             End Select
         End Sub
     End Class
@@ -267,12 +261,6 @@ Public Module ChatConnections
             Next
         End Sub
 
-        Public Sub BanUser(IpAddress As String, Reason As String, until As Date)
-            Dim msg As New MessageLanguage.banmessage
-            msg.Reason = Reason
-            msg.until = until
-            send(msg, IpAddress)
-        End Sub
         Public Overrides Sub KickUser(IpAddress As String, Reason As String)
             Dim msg As New MessageLanguage.kickmessage
             msg.Reason = Reason
@@ -296,14 +284,9 @@ Public Module ChatConnections
         End Sub
         Private Sub LeaveMessage(message As MessageLanguage.LeaveMessage, SenderIp As String)
             Dim userint As Integer = MatchIpToUserInt(message.SenderIp)
+            SendEveryone(message, KnownUsers(userint))
             RaiseUserLeft(KnownUsers(userint))
             ChatRoom.ConnectedUserIndex.RemoveAt(userint)
-            For i = 0 To ChatRoom.ConnectedUserIndex.Count - 1
-
-                If Not SenderIp = KnownUsers(ChatRoom.ConnectedUserIndex(i)).IpAddress Then
-                    send(message, ChatRoom.ConnectedUserIndex(i))
-                End If
-            Next
         End Sub
         Private Sub PrivateMessage(message As MessageLanguage.privatemessage, SenderIp As String)
             RaisePrivateMessageArrived(message)
@@ -317,12 +300,7 @@ Public Module ChatConnections
         End Sub
         Private Sub PublicMessage(message As MessageLanguage.publicmessage, SenderIp As String)
             RaisePublicMessageArrived(message)
-            Dim SenderUserInt = MatchIpToUserInt(SenderIp)
-            For i = 0 To ChatRoom.ConnectedUserIndex.Count - 1
-                If Not SenderUserInt = ChatRoom.ConnectedUserIndex(i) Then
-                    send(message, ChatRoom.ConnectedUserIndex(i))
-                End If
-            Next
+            SendEveryone(message, MatchIpToUser(SenderIp))
         End Sub
 
         Private Sub SendEveryone(ByVal message As Object)
@@ -333,7 +311,21 @@ Public Module ChatConnections
                 thread.Start()
             Next
         End Sub
-
+        ''' <summary>
+        ''' Sends A message to everyone in the chatroom but one User
+        ''' </summary>
+        ''' <param name="message"></param>
+        ''' <param name="But"></param>
+        ''' <remarks></remarks>
+        Private Sub SendEveryone(ByVal message As Object, ByVal But As User)
+            For i = 0 To ChatRoom.ConnectedUserIndex.Count - 1
+                If Not But.UserID = i Then
+                    Dim k As Integer = i
+                    Dim thread As New Threading.Thread(Sub() sendaway(message, KnownUsers(ChatRoom.ConnectedUserIndex(k))))
+                    thread.Name = "TCP Client send"
+                    thread.Start()
+                End If
+            Next
+        End Sub
     End Class
-
 End Module

@@ -23,6 +23,7 @@ Partial Class StartForm
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim ListViewItem1 As System.Windows.Forms.ListViewItem = New System.Windows.Forms.ListViewItem(New String() {"Hi", "", "", "", ""}, -1)
         Me.Button1 = New System.Windows.Forms.Button()
         Me.ListViewUsers = New System.Windows.Forms.ListView()
         Me.NameHeader = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -62,6 +63,7 @@ Partial Class StartForm
         Me.ListViewUsers.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.NameHeader, Me.StatusHeader, Me.ComputerNameHeader, Me.IpHeader})
         Me.ListViewUsers.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ListViewUsers.FullRowSelect = True
+        Me.ListViewUsers.Items.AddRange(New System.Windows.Forms.ListViewItem() {ListViewItem1})
         Me.ListViewUsers.Location = New System.Drawing.Point(3, 3)
         Me.ListViewUsers.Name = "ListViewUsers"
         Me.ListViewUsers.Size = New System.Drawing.Size(315, 160)
