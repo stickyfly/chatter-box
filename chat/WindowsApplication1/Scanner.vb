@@ -11,7 +11,7 @@ Module Scanner
     ''' <remarks></remarks>
     Public Event ProgressUpdated(ByVal IPs As List(Of String), ByVal progress As Single)
     Public Event FinishedScan()
-    Sub ScanNetwork()
+    Public Sub ScanNetwork()
         Dim subnetmask(3) As Byte
         Dim defaultgateway(3) As Byte
         Dim SomeRandomNumber As Integer

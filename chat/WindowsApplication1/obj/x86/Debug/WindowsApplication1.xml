@@ -6,7 +6,15 @@ WindowsApplication1
 </name>
 </assembly>
 <members>
-<member name="M:WindowsApplication1.NewConnections.NewConnectionEstablisher.CreateNewChat(System.Collections.Generic.List{WindowsApplication1.Users.User})">
+<member name="E:WindowsApplication1.NewConnections.NewConnectionEstablisher.connection_request">
+	<summary>
+ Represents an Event that occurs, if a remote user establishes a connection
+ </summary>
+	<param name="ChatroomId">The Index that was allocated to the chatroom in the Chatroomsjoined Database</param>
+	<param name="user">The hos of the Chat</param>
+	<param name="otheruserIps">All invited and connected Users in the chatroom</param>
+	<remarks></remarks>
+</member><member name="M:WindowsApplication1.NewConnections.NewConnectionEstablisher.CreateNewChat(System.Collections.Generic.List{WindowsApplication1.Users.User})">
 	<summary>
  Sends a Chat Request to a known User or a Group
  </summary>
@@ -44,6 +52,13 @@ WindowsApplication1
 </member><member name="P:WindowsApplication1.ColourListBox.ListboxItem.BackColor">
 	<summary>
  Sets or Gets the ForeColor of the Item
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="P:WindowsApplication1.ColourListBox.ListboxItem.Time">
+	<summary>
+ Sets or gets the shown time of the item.
  </summary>
 	<value></value>
 	<returns></returns>

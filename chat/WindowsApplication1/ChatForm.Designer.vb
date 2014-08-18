@@ -28,8 +28,8 @@ Partial Class ChatForm
         Me.KickBtn = New System.Windows.Forms.Button()
         Me.LeaveBtn = New System.Windows.Forms.Button()
         Me.HostLabel = New System.Windows.Forms.Label()
-        Me.CheckedListBox1 = New System.Windows.Forms.CheckedListBox()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.ListViewUsers = New System.Windows.Forms.ListView()
         Me.SuspendLayout()
         '
         'Label1
@@ -60,7 +60,7 @@ Partial Class ChatForm
         '
         'KickBtn
         '
-        Me.KickBtn.Location = New System.Drawing.Point(560, 143)
+        Me.KickBtn.Location = New System.Drawing.Point(557, 155)
         Me.KickBtn.Name = "KickBtn"
         Me.KickBtn.Size = New System.Drawing.Size(160, 23)
         Me.KickBtn.TabIndex = 8
@@ -86,14 +86,6 @@ Partial Class ChatForm
         Me.HostLabel.TabIndex = 9
         Me.HostLabel.Text = "Host:"
         '
-        'CheckedListBox1
-        '
-        Me.CheckedListBox1.FormattingEnabled = True
-        Me.CheckedListBox1.Location = New System.Drawing.Point(560, 28)
-        Me.CheckedListBox1.Name = "CheckedListBox1"
-        Me.CheckedListBox1.Size = New System.Drawing.Size(160, 109)
-        Me.CheckedListBox1.TabIndex = 10
-        '
         'Panel1
         '
         Me.Panel1.Location = New System.Drawing.Point(12, 12)
@@ -101,13 +93,23 @@ Partial Class ChatForm
         Me.Panel1.Size = New System.Drawing.Size(539, 270)
         Me.Panel1.TabIndex = 11
         '
+        'ListViewUsers
+        '
+        Me.ListViewUsers.CheckBoxes = True
+        Me.ListViewUsers.Location = New System.Drawing.Point(557, 28)
+        Me.ListViewUsers.Name = "ListViewUsers"
+        Me.ListViewUsers.Size = New System.Drawing.Size(160, 121)
+        Me.ListViewUsers.TabIndex = 12
+        Me.ListViewUsers.UseCompatibleStateImageBehavior = False
+        Me.ListViewUsers.View = System.Windows.Forms.View.List
+        '
         'ChatForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(732, 320)
+        Me.Controls.Add(Me.ListViewUsers)
         Me.Controls.Add(Me.Panel1)
-        Me.Controls.Add(Me.CheckedListBox1)
         Me.Controls.Add(Me.HostLabel)
         Me.Controls.Add(Me.LeaveBtn)
         Me.Controls.Add(Me.KickBtn)
@@ -126,6 +128,6 @@ Partial Class ChatForm
     Friend WithEvents KickBtn As System.Windows.Forms.Button
     Friend WithEvents LeaveBtn As System.Windows.Forms.Button
     Friend WithEvents HostLabel As System.Windows.Forms.Label
-    Friend WithEvents CheckedListBox1 As System.Windows.Forms.CheckedListBox
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
+    Friend WithEvents ListViewUsers As System.Windows.Forms.ListView
 End Class

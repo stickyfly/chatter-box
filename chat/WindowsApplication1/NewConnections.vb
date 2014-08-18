@@ -7,20 +7,25 @@ Public Module NewConnections
         Const standartport As Integer = 41639
 
         Dim MyIpaddress As String = getipv4address.ToString
-        Dim port_ As Integer
 
         Public chatstate As MessageLanguage.chatstate
 
-        Public Event ChatStateArrived(user As User)
+        Public Event ChatStateArrived(user As User, Exists As Boolean)
+        ''' <summary>
+        ''' Represents an Event that occurs, if a remote user establishes a connection
+        ''' </summary>
+        ''' <param name="ChatroomId">The Index that was allocated to the chatroom in the Chatroomsjoined Database</param>
+        ''' <param name="user">The hos of the Chat</param>
+        ''' <param name="otheruserIps">All invited and connected Users in the chatroom</param>
+        ''' <remarks></remarks>
         Public Event connection_request(ByVal ChatroomId As Integer, user As User, ByVal otheruserIps As List(Of String))
 
         Dim edk As New System.Security.Cryptography.ECDiffieHellmanCng
 
         Dim tcplistener As System.Net.Sockets.TcpListener
-        Sub New(ByVal chatstate As MessageLanguage.chatstate, Optional ByVal port As Integer = standartport)
+        Sub New(ByVal chatstate As MessageLanguage.chatstate)
             Me.chatstate = chatstate
-            port_ = port
-            tcplistener = New System.Net.Sockets.TcpListener(Net.IPAddress.Any, port)
+            tcplistener = New System.Net.Sockets.TcpListener(Net.IPAddress.Any, standartport)
             tcplistener.Start()
             Dim timer As New Timer
             AddHandler timer.Tick, AddressOf timertick
@@ -79,14 +84,14 @@ Public Module NewConnections
                             MsgBox(ex.Message)
                         End Try
 
-                        RaiseEvent ChatStateArrived(newuser)
+                        RaiseEvent ChatStateArrived(newuser, False)
                     Else
                         KnownUsers(userint).Status = message.Status
                         KnownUsers(userint).NickName = message.name
-                        RaiseEvent ChatStateArrived(KnownUsers(userint))
+                        RaiseEvent ChatStateArrived(KnownUsers(userint), True)
                     End If
 
-                    disconnect(SenderIp)
+                    disconnect()
                 Case GetType(MessageLanguage.ConnectionRequest)
                     Dim message As MessageLanguage.ConnectionRequest = Data
                     Dim AllIps As List(Of String) = message.otherUserIps
@@ -133,7 +138,6 @@ Public Module NewConnections
 
                 Case GetType(MessageLanguage.ConnectionRequestAnswer)
                     Dim message As MessageLanguage.ConnectionRequestAnswer = Data
-                    Dim cra As New MessageLanguage.ConnectionRequestAnswer
 
                     For i = 0 To ChatRoomsHosting.Count - 1 'Match the chatroom Id to chatroom
                         If ChatRoomsHosting(i).ID = message.ChatRoomID Then
@@ -149,7 +153,6 @@ Public Module NewConnections
             End Select
         End Sub
         Public Sub AskforStatusAndEnrypt(ipaddress As String)
-            NewConnectionHelper.ClientIpConnections.Add(ipaddress)
 
             Dim msg As New MessageLanguage.KeyAndState
             msg.key = edk.PublicKey
@@ -165,10 +168,9 @@ Public Module NewConnections
             Catch ex As Exception
                 Dim NoUser As New User
                 NoUser.IpAddress = ipAddress
-                RaiseEvent ChatStateArrived(NoUser)
+                RaiseEvent ChatStateArrived(NoUser, False)
             End Try
         End Sub
-
         ''' <summary>
         ''' Sends a Chat Request to a known User or a Group
         ''' </summary>
@@ -234,7 +236,7 @@ Public Module NewConnections
                 MsgBox(ex.Message)
             End Try
             Dim chatwindow As New ChatForm
-            chatwindow.Text = "Client"
+            chatwindow.Text = ChatRoomsJoined(ChatRoomIndex).Name.Text
             chatwindow.ChatConnection = New ChatClientConnection(ChatRoomIndex)
             chatwindow.Show()
         End Sub
@@ -250,7 +252,7 @@ Public Module NewConnections
         End Sub
         Private Sub sendaway(ByVal message As Object, user As User)
 
-            Dim tcpclient = New TcpClient(user.IpAddress, port_)
+            Dim tcpclient = New TcpClient(user.IpAddress, standartport)
             Dim stream As NetworkStream = tcpclient.GetStream
 
             If Not user.key Is Nothing Then
@@ -263,14 +265,8 @@ Public Module NewConnections
             tcpclient.Close()
         End Sub
 
-        Public Sub disconnect(IpAddress As String)
-            NewConnectionHelper.ClientIpConnections.Remove(IpAddress)
-            port_ = standartport
-
+        Public Sub disconnect()
             edk = New System.Security.Cryptography.ECDiffieHellmanCng
         End Sub
-    End Class
-    Public Class NewConnectionHelper
-        Public Shared ClientIpConnections As New List(Of String)
     End Class
 End Module

@@ -55,3 +55,15 @@ C:\Users\Laurin\Documents\Vb-Projects\Chatter-Box\chat\WindowsApplication1\obj\x
 C:\Users\Laurin\Documents\Vb-Projects\Chatter-Box\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.StartForm.resources
 C:\Users\Laurin\Documents\Vb-Projects\Chatter-Box\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.Resources.resources
 C:\Users\Laurin\Documents\Vb-Projects\Chatter-Box\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.vbproj.GenerateResource.Cache
+E:\Software\Chatter-Box\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.exe
+E:\Software\Chatter-Box\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.xml
+E:\Software\Chatter-Box\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.pdb
+E:\Software\Chatter-Box\chat\WindowsApplication1\bin\Debug\WindowsApplication1.exe
+E:\Software\Chatter-Box\chat\WindowsApplication1\bin\Debug\WindowsApplication1.pdb
+E:\Software\Chatter-Box\chat\WindowsApplication1\bin\Debug\WindowsApplication1.xml
+E:\Software\Chatter-Box\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.ChatForm.resources
+E:\Software\Chatter-Box\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.StartForm.resources
+E:\Software\Chatter-Box\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.Resources.resources
+E:\Software\Chatter-Box\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.vbproj.GenerateResource.Cache
+C:\Users\Laurin\Documents\Vb-Projects\Chatter-Box\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.TextInputBox.resources
+C:\Users\Laurin\Documents\Vb-Projects\Chatter-Box\chat\WindowsApplication1\obj\x86\Debug\WindowsApplication1.vbprojResolveAssemblyReference.cache

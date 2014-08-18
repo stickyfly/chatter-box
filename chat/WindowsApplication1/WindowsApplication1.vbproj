@@ -73,6 +73,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -108,6 +109,12 @@
     <Compile Include="Definitions.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="TextInputBox.Designer.vb">
+      <DependentUpon>TextInputBox.vb</DependentUpon>
+    </Compile>
+    <Compile Include="TextInputBox.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="NewConnections.vb" />
     <Compile Include="ChatHostClient.vb" />
     <Compile Include="StartForm.vb">
@@ -138,6 +145,9 @@
   <ItemGroup>
     <EmbeddedResource Include="ChatForm.resx">
       <DependentUpon>ChatForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TextInputBox.resx">
+      <DependentUpon>TextInputBox.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="StartForm.resx">
       <DependentUpon>StartForm.vb</DependentUpon>
